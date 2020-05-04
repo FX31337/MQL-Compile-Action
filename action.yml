@@ -1,32 +1,18 @@
 # action.yml
 ---
-name: 'EA Tester'
-description: 'Runs MQL program'
+name: 'MQL Compile'
+description: 'Compiles MQL program'
 author: 'kenorb'
 inputs:
-  OptTrace:
-    description: 'Enables trace mode (debug)'
-  OptVerbose:
-    description: 'Enables verbose mode'
-    default: true
-  Script:
-    description: 'The name of the script to run'
-  TestExpert:
-    description: 'The name of the EA to test'
-    # required: true
+  Path:
+    description: 'Path to compile'
+    required: true
 # outputs:
 #  foo: # id of output
 #    description: 'Foo'
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  args:
-    - "-v"
-  env:
-    OPT_TRACE: ${{ inputs.OptTrace }}
-    OPT_VERBOSE: ${{ inputs.OptVerbose }}
-    SCRIPT: ${{ inputs.Script }}
-    TEST_EXPERT: ${{ inputs.TestExpert }}
 branding:
   icon: 'bar-chart'
   color: 'green'
