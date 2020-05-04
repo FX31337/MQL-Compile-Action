@@ -9,8 +9,4 @@ jobs:
   Script:
     runs-on: ubuntu-latest
     steps:
-      - uses: ea31337/mql-action@dev
-        with:
-          OptTrace: true
-          OptVerbose: true
-          Script: "PrintPaths"
+      - uses: ea31337/mql-compile-action@dev
