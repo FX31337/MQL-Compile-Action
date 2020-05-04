@@ -7,6 +7,6 @@ on:
 
 jobs:
   Script:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: ea31337/mql-compile-action@dev
