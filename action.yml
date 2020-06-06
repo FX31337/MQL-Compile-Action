@@ -14,5 +14,6 @@ inputs:
 #  foo: # id of output
 #    description: 'Foo'
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: node12
+  main: dist/index.js
+  post: dist/index.js
