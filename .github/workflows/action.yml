@@ -1,0 +1,14 @@
+---
+name: Action
+
+on:
+  - pull_request
+  - push
+
+jobs:
+  Local:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run local action
+        uses: ./

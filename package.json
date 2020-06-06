@@ -1,0 +1,37 @@
+{
+  "name": "MQL-Compile-Action",
+  "version": "1.0.0",
+  "description": "Compiles MQL programs",
+  "main": "lib/main.js",
+  "scripts": {
+    "build": "ncc build",
+    "lint": "eslint index.js",
+    "package": "ncc build index.js -o dist",
+    "test": "eslint index.js && jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FX31337/MQL-Compile-Action.git"
+  },
+  "keywords": [
+    "github",
+    "actions",
+    "mql"
+  ],
+  "author": "kenorb",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FX31337/MQL-Compile-Action/issues"
+  },
+  "homepage": "https://github.com/FX31337/MQL-Compile-Action/issues",
+  "dependencies": {
+    "@actions/core": "^1.1",
+    "@actions/exec": "^1.0",
+    "@actions/io": "^1.0"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "^0.20",
+    "eslint": "^6.3.0",
+    "jest": "^24.9.0"
+  }
+}
