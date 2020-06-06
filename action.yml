@@ -1,8 +1,11 @@
 # action.yml
 ---
 name: 'MQL Compile'
-description: 'Compiles MQL program'
+description: 'Compiles MQL programs'
 author: 'kenorb'
+branding:
+  icon: 'bar-chart'
+  color: 'green'
 inputs:
   Path:
     description: 'Path to compile'
@@ -11,8 +14,5 @@ inputs:
 #  foo: # id of output
 #    description: 'Foo'
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
-branding:
-  icon: 'bar-chart'
-  color: 'green'
+  using: 'node12'
+  main: 'dist/index.js'

@@ -1,4 +1,4 @@
-# MQL Compile 🐳 Action
+# MQL Compile Action
 
 <!-- [![Release][github-release-image]][github-release-link] -->
 <!-- [![Docker image][docker-build-image]][docker-build-link] -->
@@ -73,4 +73,3 @@ with:
 
 [gitpod-image]: https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod
 [gitpod-link]: https://gitpod.io/#https://github.com/FX31337/MQL-Compile-Action
-
