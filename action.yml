@@ -7,9 +7,33 @@ branding:
   icon: 'bar-chart'
   color: 'green'
 inputs:
-  Path:
+  path:
     description: 'Path to compile'
     required: true
+  mt_version:
+    description: 'MetaTrader release version'
+    required: false
+    default: '5.0.0.2361'
+  mt_cleanup:
+    description: 'Whether to remove extracted metaeditor files after compilation'
+    required: false
+    default: true
+  ignore_warnings:
+    description: 'Whether to ignore compilation warnings'
+    required: false
+    default: false
+  log_file:
+    description: 'Log file path'
+    required: false
+    default: 'mql-log.log'
+  check_syntax_only:
+    description: 'Whether to skip generating output file and only check for syntax errors'
+    required: false
+    default: false
+  verbose:
+    description: 'Whether to be verbose in printing what is going on'
+    required: false
+    default: false
 # outputs:
 #  foo: # id of output
 #    description: 'Foo'

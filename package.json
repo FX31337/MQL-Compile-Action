@@ -27,11 +27,15 @@
   "dependencies": {
     "@actions/core": "^1.1",
     "@actions/exec": "^1.0",
-    "@actions/io": "^1.0"
+    "@actions/github": "^3.0.0",
+    "@actions/io": "^1.0",
+    "encoding": "^0.1.12"
   },
   "devDependencies": {
     "@zeit/ncc": "^0.20",
     "eslint": "^6.3.0",
-    "jest": "^24.9.0"
+    "jest": "^24.9.0",
+    "node-stream-zip": "^1.11.2",
+    "q": "^1.5.1"
   }
 }
