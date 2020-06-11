@@ -4,12 +4,14 @@ name: Test
 on:
   pull_request:
     paths:
-      - '**/*.md'
+      - '**/*.js'
       - '**/*.y?ml'
+      - '*.js'
   push:
     paths:
-      - '**/*.md'
+      - '**/*.js'
       - '**/*.y?ml'
+      - '*.js'
 
 jobs:
   build:
