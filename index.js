@@ -23,8 +23,7 @@ const input = realRun ? {
   verbose: core.getInput('verbose')
 } : {
   compilePath: '.',
-  //metaTraderVersion: '5.0.0.2361',
-  metaTraderVersion: '4.0.0.1260',
+  metaTraderVersion: '5.0.0.2361',
   metaTraderCleanUp: true,
   ignoreWarnings: false,
   logFilePath: 'my-custom-log.log',
