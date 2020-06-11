@@ -10,33 +10,31 @@ inputs:
   path:
     description: 'Path to compile'
     required: true
-  mt_version:
-    description: 'MetaTrader release version'
+    default: '.'
+  mt-version:
+    description: 'MetaTrader platform version to use'
     required: false
     default: '5.0.0.2361'
-  mt_cleanup:
+  mt-cleanup:
     description: 'Whether to remove extracted metaeditor files after compilation'
     required: false
     default: true
-  ignore_warnings:
+  ignore-warnings:
     description: 'Whether to ignore compilation warnings'
     required: false
     default: false
-  log_file:
-    description: 'Log file path'
+  log-file:
+    description: 'Specifies log filename for compilation messages.'
     required: false
-    default: 'mql-log.log'
-  check_syntax_only:
-    description: 'Whether to skip generating output file and only check for syntax errors'
+    default: 'mql.log'
+  check-syntax-only:
+    description: 'Whether to skip generating binary file and only check for syntax errors'
     required: false
     default: false
   verbose:
-    description: 'Whether to be verbose in printing what is going on'
+    description: 'Enables verbose mode (to print more messages)'
     required: false
     default: false
-# outputs:
-#  foo: # id of output
-#    description: 'Foo'
 runs:
   using: node12
   main: dist/index.js

@@ -5,6 +5,8 @@
   "main": "lib/main.js",
   "scripts": {
     "build": "ncc build",
+    "format": "prettier --write '*.js'",
+    "format-check": "prettier --check '*.js'",
     "lint": "eslint index.js",
     "package": "ncc build index.js -o dist",
     "test": "eslint index.js && jest"

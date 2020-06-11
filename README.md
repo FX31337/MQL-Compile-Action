@@ -1,51 +1,54 @@
 # MQL Compile Action
 
 <!-- [![Release][github-release-image]][github-release-link] -->
-<!-- [![Docker image][docker-build-image]][docker-build-link] -->
 [![Status][gha-image-action-master]][gha-link-action-master]
 [![Status][gha-image-docker-master]][gha-link-docker-master]
 [![Status][gha-image-lint-master]][gha-link-lint-master]
-[![][tg-channel-image]][tg-channel-link]
-[![][tg-chat-image]][tg-chat-link]
+[![Telegram Channel][tg-channel-image]][tg-channel-link]
+[![Telegram Chat][tg-chat-image]][tg-chat-link]
 [![Edit][gitpod-image]][gitpod-link]
 
 This GitHub Action compiles MQL programs.
 
-## Inputs
-
-### `Path`
-
-Path to folder or file to compile.
-
-Default: `.` (all files in the current folder are compiled).
-
-<!--
-## Other Inputs
-
-### `OptTrace`
-
-Enables trace mode. It provides extensive debugging messages.
-
-### `OptVerbose`
-
-Enables verbose mode. It provides more detailed messages.
--->
-
-<!--
-## Outputs
-
-### `foo`
-
-Foo bar.
--->
-
-## Example usage
+## Usage
 
 ```yaml
 uses: fx31337/mql-compile-action@master
 with:
   Path: '.'
 ```
+
+## Inputs
+
+### `path` (string)
+
+Path to folder or file to compile.
+
+Default: `.` (all files in the current folder are compiled).
+
+### `mt-version` (string)
+
+MetaTrader platform version to use. Default: *5.0.0.2361*.
+
+### `mt-cleanup` (bool)
+
+Whether to remove extracted metaeditor files after compilation. Default: *true*.
+
+### `ignore-warnings` (bool)
+
+Whether to ignore compilation warnings.
+
+### `log-file` (string)
+
+Specifies log filename for compilation messages.
+
+### `check-syntax-only` (bool)
+
+Whether to skip generating binary file and only check for syntax errors.
+
+### `verbose` (bool)
+
+Enables verbose mode (to print more messages). Default: *false*.
 
 ### Support
 
@@ -56,8 +59,6 @@ with:
 
 [github-release-image]: https://img.shields.io/github/release/FX31337/MQL-Compile-Action.svg?logo=github
 [github-release-link]: https://github.com/FX31337/MQL-Compile-Action/releases
-[docker-build-image]: https://images.microbadger.com/badges/image/ea31337/mql-compile-action-action.svg
-[docker-build-link]: https://microbadger.com/images/ea31337/mql-compile-action-action
 
 [tg-channel-image]: https://img.shields.io/badge/Telegram-news-0088CC.svg?logo=telegram
 [tg-channel-link]: https://t.me/EA31337_News
