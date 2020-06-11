@@ -1,21 +1,58 @@
 # MQL Compile Action
 
-<!-- [![Release][github-release-image]][github-release-link] -->
+[![Release][github-release-image]][github-release-link]
 [![Status][gha-image-action-master]][gha-link-action-master]
-[![Status][gha-image-docker-master]][gha-link-docker-master]
 [![Status][gha-image-lint-master]][gha-link-lint-master]
+[![Status][gha-image-test-master]][gha-link-test-master]
 [![Telegram Channel][tg-channel-image]][tg-channel-link]
 [![Telegram Chat][tg-chat-image]][tg-chat-link]
 [![Edit][gitpod-image]][gitpod-link]
 
 This GitHub Action compiles MQL programs.
 
+For full documentation, please read: [GitHub Actions Documentation](https://help.github.com/en/actions).
+
 ## Usage
 
+This action is only supported on [Windows images](https://github.com/actions/virtual-environments).
+
+### Latest release
+
 ```yaml
-uses: fx31337/mql-compile-action@master
-with:
-  Path: '.'
+runs-on: windows-latest
+steps:
+  - uses: fx31337/mql-compile-action@v1
+```
+
+### Specific release
+
+```yaml
+runs-on: windows-latest
+steps:
+  - uses: fx31337/mql-compile-action@v1.0.0
+```
+
+Note: Check *Releases* for more details.
+
+### Latest development version
+
+```yaml
+runs-on: windows-latest
+steps:
+  - uses: fx31337/mql-compile-action@master
+```
+
+### Overriding default inputs
+
+```yaml
+runs-on: windows-latest
+steps:
+  - uses: fx31337/mql-compile-action@master
+    with:
+        path: 'path/Dummy.mq5'
+        log-file: 'results.log'
+        ignore-warnings: true
+        verbose: true
 ```
 
 ## Inputs
@@ -67,10 +104,10 @@ Enables verbose mode (to print more messages). Default: *false*.
 
 [gha-link-action-master]: https://github.com/FX31337/MQL-Compile-Action/actions?query=workflow%3AAction+branch%3Amaster
 [gha-image-action-master]: https://github.com/FX31337/MQL-Compile-Action/workflows/Action/badge.svg
-[gha-link-docker-master]: https://github.com/FX31337/MQL-Compile-Action/actions?query=workflow%3ADocker+branch%3Amaster
-[gha-image-docker-master]: https://github.com/FX31337/MQL-Compile-Action/workflows/Docker/badge.svg
 [gha-link-lint-master]: https://github.com/FX31337/MQL-Compile-Action/actions?query=workflow%3ALint+branch%3Amaster
 [gha-image-lint-master]: https://github.com/FX31337/MQL-Compile-Action/workflows/Lint/badge.svg
+[gha-link-test-master]: https://github.com/FX31337/MQL-Compile-Action/actions?query=workflow%3ATest+branch%3Amaster
+[gha-image-test-master]: https://github.com/FX31337/MQL-Compile-Action/workflows/Test/badge.svg
 
 [gitpod-image]: https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod
 [gitpod-link]: https://gitpod.io/#https://github.com/FX31337/MQL-Compile-Action

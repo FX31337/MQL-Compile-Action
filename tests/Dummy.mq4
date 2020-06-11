@@ -1,7 +1,7 @@
 //+------------------------------------------------------------------+
 //|                                                            Dummy |
 //|                       Copyright 2016-2020, 31337 Investments Ltd |
-//|                                       https://github.com/EA31337 |
+//|                                       https://github.com/FX31337 |
 //+------------------------------------------------------------------+
 
 /**
@@ -9,7 +9,5 @@
  * Dummy script to run OnInit().
  */
 
-/**
- * Initialization function.
- */
-int OnInit() { return INIT_SUCCEEDED; }
+// Includes the main code.
+#include "Dummy.mq5"
