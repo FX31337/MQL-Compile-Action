@@ -4,8 +4,8 @@
 [![Status][gha-image-action-master]][gha-link-action-master]
 [![Status][gha-image-docker-master]][gha-link-docker-master]
 [![Status][gha-image-lint-master]][gha-link-lint-master]
-[![][tg-channel-image]][tg-channel-link]
-[![][tg-chat-image]][tg-chat-link]
+[![Telegram Channel][tg-channel-image]][tg-channel-link]
+[![Telegram Chat][tg-chat-image]][tg-chat-link]
 [![Edit][gitpod-image]][gitpod-link]
 
 This GitHub Action compiles MQL programs.
