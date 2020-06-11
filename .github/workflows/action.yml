@@ -12,11 +12,3 @@ jobs:
       - uses: actions/checkout@v2
       - name: Run local action
         uses: ./
-        with:
-          path: "."
-          mt_version: '5.0.0.2361'
-          mt_cleanup: true
-          ignore_warnings: false
-          log_file: 'mql-log-custom.log'
-          verbose: true
-          check_syntax_only: false

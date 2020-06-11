@@ -26,7 +26,7 @@ inputs:
   log-file:
     description: 'Specifies log filename for compilation messages.'
     required: false
-    default: 'mql-log.log'
+    default: 'mql.log'
   check-syntax-only:
     description: 'Whether to skip generating binary file and only check for syntax errors'
     required: false
