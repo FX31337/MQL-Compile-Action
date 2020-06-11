@@ -4,6 +4,7 @@
 [![Status][gha-image-action-master]][gha-link-action-master]
 [![Status][gha-image-docker-master]][gha-link-docker-master]
 [![Status][gha-image-lint-master]][gha-link-lint-master]
+[![Status][gha-image-test-master]][gha-link-test-master]
 [![Telegram Channel][tg-channel-image]][tg-channel-link]
 [![Telegram Chat][tg-chat-image]][tg-chat-link]
 [![Edit][gitpod-image]][gitpod-link]
@@ -108,6 +109,8 @@ Enables verbose mode (to print more messages). Default: *false*.
 [gha-image-docker-master]: https://github.com/FX31337/MQL-Compile-Action/workflows/Docker/badge.svg
 [gha-link-lint-master]: https://github.com/FX31337/MQL-Compile-Action/actions?query=workflow%3ALint+branch%3Amaster
 [gha-image-lint-master]: https://github.com/FX31337/MQL-Compile-Action/workflows/Lint/badge.svg
+[gha-link-test-master]: https://github.com/FX31337/MQL-Compile-Action/actions?query=workflow%3ATest+branch%3Amaster
+[gha-image-test-master]: https://github.com/FX31337/MQL-Compile-Action/workflows/test/badge.svg
 
 [gitpod-image]: https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod
 [gitpod-link]: https://gitpod.io/#https://github.com/FX31337/MQL-Compile-Action
