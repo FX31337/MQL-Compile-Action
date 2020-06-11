@@ -10,12 +10,39 @@
 
 This GitHub Action compiles MQL programs.
 
+For full documentation, please read: [GitHub Actions Documentation](https://help.github.com/en/actions).
+
 ## Usage
+
+### Latest release
+
+```yaml
+uses: fx31337/mql-compile-action@v1
+```
+
+### Specific release
+
+```yaml
+uses: fx31337/mql-compile-action@v1.0.0
+```
+
+Note: Check *Releases* for more details.
+
+### Latest development version
+
+```yaml
+uses: fx31337/mql-compile-action@master
+```
+
+### Overriding default inputs
 
 ```yaml
 uses: fx31337/mql-compile-action@master
 with:
-  Path: '.'
+    path: 'path/Dummy.mq5'
+    log-file: 'results.log'
+    ignore-warnings: true
+    verbose: true
 ```
 
 ## Inputs
