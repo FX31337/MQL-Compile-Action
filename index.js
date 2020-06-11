@@ -15,17 +15,17 @@ const realRun = true;
 
 const input = realRun ? {
   compilePath: core.getInput('path'),
-  metaTraderVersion: core.getInput('mt_version'),
-	metaTraderCleanUp: core.getInput('mt_cleanup'),
-  ignoreWarnings: core.getInput('ignore_warnings'),
-  logFilePath: core.getInput('log_file'),
-  checkSyntaxOnly: core.getInput('check_syntax_only'),
+  metaTraderVersion: core.getInput('mt-version'),
+  metaTraderCleanUp: core.getInput('mt-cleanup'),
+  ignoreWarnings: core.getInput('ignore-warnings'),
+  logFilePath: core.getInput('log-file'),
+  checkSyntaxOnly: core.getInput('check-syntax-only'),
   verbose: core.getInput('verbose')
 } : {
   compilePath: '.',
   //metaTraderVersion: '5.0.0.2361',
   metaTraderVersion: '4.0.0.1260',
-	metaTraderCleanUp: true,
+  metaTraderCleanUp: true,
   ignoreWarnings: false,
   logFilePath: 'my-custom-log.log',
   checkSyntaxOnly: false,
@@ -115,8 +115,8 @@ try {
           }
 
           exec(`rm "${metaEditorZipPath}"`, () => {
-          	if (input.metaTraderCleanUp)
-	        	  exec(`rm -R "MetaTrader ${metaTraderMajorVersion}"`);
+            if (input.metaTraderCleanUp)
+              exec(`rm -R "MetaTrader ${metaTraderMajorVersion}"`);
           });
         });
       });
