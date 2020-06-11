@@ -1,6 +1,6 @@
 # MQL Compile Action
 
-<!-- [![Release][github-release-image]][github-release-link] -->
+[![Release][github-release-image]][github-release-link]
 [![Status][gha-image-action-master]][gha-link-action-master]
 [![Status][gha-image-docker-master]][gha-link-docker-master]
 [![Status][gha-image-lint-master]][gha-link-lint-master]
