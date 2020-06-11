@@ -9,7 +9,5 @@
  * Dummy script to run OnInit().
  */
 
-/**
- * Initialization function.
- */
-int OnInit() { return INIT_SUCCEEDED; }
+// Includes the main code.
+#include "Dummy.mq5"
