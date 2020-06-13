@@ -9373,154 +9373,154 @@ module.exports = [["0","\u0000",127,"€"],["8140","丂丄丅丆丏丒丗丟丠�
 /***/ 410:
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
-const fs = __webpack_require__(747);
-const Q = __webpack_require__(369);
-const StreamZip = __webpack_require__(117);
-const url = __webpack_require__(835);
-const encoding = __webpack_require__(509);
-const process = __webpack_require__(765);
-const core = __webpack_require__(357);
-const github = __webpack_require__(955);
-const { exec } = __webpack_require__(129);
-const https = __webpack_require__(211);
+const fs = __webpack_require__(747)
+const Q = __webpack_require__(369)
+const StreamZip = __webpack_require__(117)
+const url = __webpack_require__(835)
+const encoding = __webpack_require__(509)
+const process = __webpack_require__(765)
+const core = __webpack_require__(357)
+const github = __webpack_require__(955)
+const {exec} = __webpack_require__(129)
+const https = __webpack_require__(211)
 
 // Set this to false if you want to test the action locally via:
 // $ ncc build && node index.js
-const realRun = true;
+const realRun = true
 
 const input = realRun
   ? {
-      compilePath: core.getInput("path"),
-      metaTraderVersion: core.getInput("mt-version"),
-      metaTraderCleanUp: core.getInput("mt-cleanup"),
-      ignoreWarnings: core.getInput("ignore-warnings"),
-      logFilePath: core.getInput("log-file"),
-      checkSyntaxOnly: core.getInput("check-syntax-only"),
-      verbose: core.getInput("verbose"),
+      compilePath: core.getInput('path'),
+      metaTraderVersion: core.getInput('mt-version'),
+      metaTraderCleanUp: core.getInput('mt-cleanup'),
+      ignoreWarnings: core.getInput('ignore-warnings'),
+      logFilePath: core.getInput('log-file'),
+      checkSyntaxOnly: core.getInput('check-syntax-only'),
+      verbose: core.getInput('verbose')
     }
   : {
-      compilePath: ".",
-      metaTraderVersion: "5.0.0.2361",
+      compilePath: '.',
+      metaTraderVersion: '5.0.0.2361',
       metaTraderCleanUp: true,
       ignoreWarnings: false,
-      logFilePath: "my-custom-log.log",
+      logFilePath: 'my-custom-log.log',
       checkSyntaxOnly: false,
-      verbose: true,
-    };
+      verbose: true
+    }
 
 function download(uri, filename) {
   if (fs.existsSync(filename)) {
     input.verbose &&
       console.log(
         `Skipping downloading of "${uri}" as "${filename}" already exists.`
-      );
+      )
     return new Promise((resolve, reject) => {
-      resolve();
-    });
+      resolve()
+    })
   }
 
-  const protocol = url.parse(uri).protocol.slice(0, -1);
-  const deferred = Q.defer();
+  const protocol = url.parse(uri).protocol.slice(0, -1)
+  const deferred = Q.defer()
   const onError = function (e) {
-    fs.unlink(filename);
-    deferred.reject(e);
-  };
+    fs.unlink(filename)
+    deferred.reject(e)
+  }
 
   require(protocol)
     .get(uri, function (response) {
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        const fileStream = fs.createWriteStream(filename);
-        fileStream.on("error", onError);
-        fileStream.on("close", deferred.resolve);
-        response.pipe(fileStream);
+        const fileStream = fs.createWriteStream(filename)
+        fileStream.on('error', onError)
+        fileStream.on('close', deferred.resolve)
+        response.pipe(fileStream)
       } else if (response.headers.location) {
-        deferred.resolve(download(response.headers.location, filename));
+        deferred.resolve(download(response.headers.location, filename))
       } else {
         deferred.reject(
-          new Error(response.statusCode + " " + response.statusMessage)
-        );
+          new Error(response.statusCode + ' ' + response.statusMessage)
+        )
       }
     })
-    .on("error", onError);
+    .on('error', onError)
 
-  return deferred.promise;
+  return deferred.promise
 }
 
-const metaTraderMajorVersion = input.metaTraderVersion[0];
-const metaTraderDownloadUrl = `https://github.com/EA31337/MT-Platforms/releases/download/${input.metaTraderVersion}/mt-${input.metaTraderVersion}.zip`;
-const metaEditorZipPath = `metaeditor${metaTraderMajorVersion}.zip`;
+const metaTraderMajorVersion = input.metaTraderVersion[0]
+const metaTraderDownloadUrl = `https://github.com/EA31337/MT-Platforms/releases/download/${input.metaTraderVersion}/mt-${input.metaTraderVersion}.zip`
+const metaEditorZipPath = `metaeditor${metaTraderMajorVersion}.zip`
 
 try {
   input.verbose &&
     console.log(
       `Downloading "${metaTraderDownloadUrl}" into "${metaEditorZipPath}"...`
-    );
+    )
   download(metaTraderDownloadUrl, metaEditorZipPath)
     .then(() => {
       if (!fs.existsSync(metaEditorZipPath))
         throw new Error(
-          "There was a problem downloading ${metaEditorZipPath} file!"
-        );
+          'There was a problem downloading ${metaEditorZipPath} file!'
+        )
 
-      input.verbose && console.log(`Unzipping "${metaEditorZipPath}"...`);
+      input.verbose && console.log(`Unzipping "${metaEditorZipPath}"...`)
 
       const zip = new StreamZip({
-        file: metaEditorZipPath,
-      });
+        file: metaEditorZipPath
+      })
 
-      zip.on("ready", () => {
-        zip.extract(null, ".", (error, count) => {
-          if (error) throw new Error(error);
+      zip.on('ready', () => {
+        zip.extract(null, '.', (error, count) => {
+          if (error) throw new Error(error)
 
-          const checkSyntaxParam = input.checkSyntaxOnly ? "/s" : "";
+          const checkSyntaxParam = input.checkSyntaxOnly ? '/s' : ''
 
-          let command;
+          let command
 
-          if (metaTraderMajorVersion === "5")
-            command = `"MetaTrader 5/metaeditor64.exe" ${checkSyntaxParam} /compile:"${input.compilePath}" /log:"${input.logFilePath}"`;
+          if (metaTraderMajorVersion === '5')
+            command = `"MetaTrader 5/metaeditor64.exe" ${checkSyntaxParam} /compile:"${input.compilePath}" /log:"${input.logFilePath}"`
           else
-            command = `"MetaTrader 4/metaeditor.exe" ${checkSyntaxParam} /compile:"${input.compilePath}" /log:"${input.logFilePath}"`;
+            command = `"MetaTrader 4/metaeditor.exe" ${checkSyntaxParam} /compile:"${input.compilePath}" /log:"${input.logFilePath}"`
 
-          input.verbose && console.log(`Executing: ${command}`);
+          input.verbose && console.log(`Executing: ${command}`)
 
           exec(command, (error, stdout, stderr) => {
             if (error && !fs.existsSync(input.logFilePath)) {
-              throw new Error(error);
+              throw new Error(error)
             }
 
             const log = fs
-              .readFileSync(input.logFilePath, "utf-16le")
-              .toString("utf8");
+              .readFileSync(input.logFilePath, 'utf-16le')
+              .toString('utf8')
 
-            input.verbose && console.log("Log output:");
-            input.verbose && console.log(log);
+            input.verbose && console.log('Log output:')
+            input.verbose && console.log(log)
 
-            let errorCheckingRule;
-            if (input.ignoreWarnings) errorCheckingRule = /[1-9]+[0-9]* error/u;
-            else errorCheckingRule = /[1-9]+[0-9]* (warning|error)/u;
+            let errorCheckingRule
+            if (input.ignoreWarnings) errorCheckingRule = /[1-9]+[0-9]* error/u
+            else errorCheckingRule = /[1-9]+[0-9]* (warning|error)/u
 
             if (errorCheckingRule.test(log)) {
               input.verbose &&
-                console.log("Warnings/errors occurred. Returning exit code 1.");
-              throw new Error("Compilation failed!");
+                console.log('Warnings/errors occurred. Returning exit code 1.')
+              throw new Error('Compilation failed!')
             }
 
             exec(`rm "${metaEditorZipPath}"`, () => {
               if (input.metaTraderCleanUp)
-                exec(`rm -R "MetaTrader ${metaTraderMajorVersion}"`);
-            });
-          });
-        });
-      });
-      zip.on("error", (error) => {
-        throw new Error(error);
-      });
+                exec(`rm -R "MetaTrader ${metaTraderMajorVersion}"`)
+            })
+          })
+        })
+      })
+      zip.on('error', error => {
+        throw new Error(error)
+      })
     })
-    .catch((error) => {
-      core.setFailed(error.message);
-    });
+    .catch(error => {
+      core.setFailed(error.message)
+    })
 } catch (error) {
-  core.setFailed(error.message);
+  core.setFailed(error.message)
 }
 
 

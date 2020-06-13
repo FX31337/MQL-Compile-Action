@@ -81,7 +81,7 @@ Specifies log filename for compilation messages.
 
 ### `check-syntax-only` (bool)
 
-Whether to skip generating binary file and only check for syntax errors.
+Whether to skip generating binary file and only check for syntax errors. Default: *false*.
 
 ### `verbose` (bool)
 
