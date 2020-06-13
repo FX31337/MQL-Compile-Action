@@ -12,3 +12,5 @@ jobs:
       - uses: actions/checkout@v2
       - name: Run local action
         uses: ./
+        with:
+          verbose: true

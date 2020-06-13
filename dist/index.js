@@ -9390,21 +9390,21 @@ const realRun = true
 
 const input = realRun
   ? {
+      checkSyntaxOnly: (core.getInput('check-syntax-only') || 'false').toUpperCase() === 'TRUE',
       compilePath: core.getInput('path'),
-      metaTraderVersion: core.getInput('mt-version'),
-      metaTraderCleanUp: core.getInput('mt-cleanup'),
-      ignoreWarnings: core.getInput('ignore-warnings'),
+      ignoreWarnings: (core.getInput('ignore-warnings') || 'false').toUpperCase() === 'TRUE',
       logFilePath: core.getInput('log-file'),
-      checkSyntaxOnly: core.getInput('check-syntax-only'),
-      verbose: core.getInput('verbose')
+      metaTraderCleanUp: (core.getInput('mt-cleanup') || 'false').toUpperCase() === 'TRUE',
+      metaTraderVersion: core.getInput('mt-version'),
+      verbose: (core.getInput('verbose') || 'false').toUpperCase() === 'TRUE'
     }
   : {
+      checkSyntaxOnly: false,
       compilePath: '.',
-      metaTraderVersion: '5.0.0.2361',
-      metaTraderCleanUp: true,
       ignoreWarnings: false,
       logFilePath: 'my-custom-log.log',
-      checkSyntaxOnly: false,
+      metaTraderCleanUp: true,
+      metaTraderVersion: '5.0.0.2361',
       verbose: true
     }
 
@@ -9477,9 +9477,9 @@ try {
           let command
 
           if (metaTraderMajorVersion === '5')
-            command = `"MetaTrader 5/metaeditor64.exe" ${checkSyntaxParam} /compile:"${input.compilePath}" /log:"${input.logFilePath}"`
+            command = `"MetaTrader 5/metaeditor64.exe" /compile:"${input.compilePath}" /log:"${input.logFilePath}" ${checkSyntaxParam}`
           else
-            command = `"MetaTrader 4/metaeditor.exe" ${checkSyntaxParam} /compile:"${input.compilePath}" /log:"${input.logFilePath}"`
+            command = `"MetaTrader 4/metaeditor.exe" /compile:"${input.compilePath}" /log:"${input.logFilePath}" ${checkSyntaxParam}`
 
           input.verbose && console.log(`Executing: ${command}`)
 

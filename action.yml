@@ -18,7 +18,7 @@ inputs:
   mt-cleanup:
     description: 'Whether to remove extracted metaeditor files after compilation'
     required: false
-    default: true
+    default: false
   ignore-warnings:
     description: 'Whether to ignore compilation warnings'
     required: false
