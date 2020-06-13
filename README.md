@@ -79,9 +79,9 @@ Whether to ignore compilation warnings.
 
 Specifies log filename for compilation messages.
 
-### `check-syntax-only` (bool)
+### `syntax-only` (bool)
 
-Whether to skip generating binary file and only check for syntax errors. Default: *false*.
+Whether to skip generating binary file and only check for syntax issues. Default: *false*.
 
 ### `verbose` (bool)
 

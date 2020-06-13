@@ -10,7 +10,12 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Run local action
+      - name: Run local action (syntax only)
+        uses: ./
+        with:
+          syntax-only: true
+          verbose: true
+      - name: Run local action (compile)
         uses: ./
         with:
           verbose: true

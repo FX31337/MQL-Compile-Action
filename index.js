@@ -15,7 +15,7 @@ const realRun = true
 
 const input = realRun
   ? {
-      checkSyntaxOnly: (core.getInput('check-syntax-only') || 'false').toUpperCase() === 'TRUE',
+      checkSyntaxOnly: (core.getInput('syntax-only') || 'false').toUpperCase() === 'TRUE',
       compilePath: core.getInput('path'),
       ignoreWarnings: (core.getInput('ignore-warnings') || 'false').toUpperCase() === 'TRUE',
       logFilePath: core.getInput('log-file'),
