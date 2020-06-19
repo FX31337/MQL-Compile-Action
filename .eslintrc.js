@@ -1,9 +1,12 @@
 module.exports = {
   env: {
     browser: true,
-    es6: true
+    es6: true,
+    node: true,
+    jest: true
   },
   extends: 'eslint:recommended',
+  plugins: ['jest'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly'
@@ -13,6 +16,11 @@ module.exports = {
     sourceType: 'module'
   },
   rules: {
+    'jest/no-disabled-tests': 'warn',
+    'jest/no-focused-tests': 'error',
+    'jest/no-identical-title': 'error',
+    'jest/prefer-to-have-length': 'warn',
+    'jest/valid-expect': 'error',
     'accessor-pairs': 'error',
     'array-bracket-newline': 'error',
     'array-bracket-spacing': 'error',
@@ -261,4 +269,4 @@ module.exports = {
     'yield-star-spacing': 'error',
     yoda: ['error', 'never']
   }
-}
+};
