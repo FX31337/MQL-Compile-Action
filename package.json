@@ -5,11 +5,11 @@
   "main": "lib/main.js",
   "scripts": {
     "build": "ncc build",
-    "format": "prettier --write '*.js'",
-    "format-check": "prettier --check '*.js'",
-    "lint": "eslint index.js",
+    "format": "prettier --write '*.js' && eslint --fix *.js",
+    "format-check": "eslint *.js",
+    "lint": "eslint *.js",
     "package": "ncc build index.js -o dist",
-    "test": "eslint index.js && jest"
+    "test": "eslint *.js && jest"
   },
   "repository": {
     "type": "git",
@@ -31,7 +31,9 @@
     "@actions/exec": "^1.0",
     "@actions/github": "^3.0.0",
     "@actions/io": "^1.0",
-    "encoding": "^0.1.12"
+    "encoding": "^0.1.12",
+    "eslint-plugin-jest": "^23.13.2",
+    "prettier": "^2.0.5"
   },
   "devDependencies": {
     "@zeit/ncc": "^0.20",
