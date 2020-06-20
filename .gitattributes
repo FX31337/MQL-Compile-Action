@@ -1,0 +1,9 @@
+# Git normalization file.
+# @see http://www.kernel.org/pub/software/scm/git/docs/gitattributes.html
+# @see http://drupal.org/node/1542048
+
+# Define text file attributes.
+*.js      text eol=lf whitespace=blank-at-eol,-blank-at-eof,-space-before-tab,tab-in-indent,tabwidth=2
+*.md      text eol=lf
+*.txt     text eol=lf
+*.yml     text eol=lf whitespace=blank-at-eol,-blank-at-eof,-space-before-tab,tab-in-indent,tabwidth=2
