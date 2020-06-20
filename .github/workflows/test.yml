@@ -24,8 +24,5 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm run format-check
-        if: false
       - run: npm run lint
-        if: false
       - run: npm test
-        if: false
