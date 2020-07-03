@@ -50,6 +50,7 @@ steps:
   - uses: fx31337/mql-compile-action@master
     with:
         path: 'path/Dummy.mq5'
+        include: '.'
         log-file: 'results.log'
         ignore-warnings: true
         verbose: true
@@ -62,6 +63,12 @@ steps:
 Path to folder or file to compile.
 
 Default: `.` (all files in the current folder are compiled).
+
+### `include` (string)
+
+Path to search for includes files.
+
+Default: `.`.
 
 ### `mt-version` (string)
 
