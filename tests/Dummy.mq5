@@ -9,6 +9,9 @@
  * Dummy script to run OnInit().
  */
 
+// Includes.
+#include <Dummy.mqh>
+
 /**
  * Initialization function.
  */

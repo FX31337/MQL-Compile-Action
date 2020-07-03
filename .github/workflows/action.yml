@@ -13,11 +13,13 @@ jobs:
       - name: Run local action (syntax only)
         uses: ./
         with:
+          include: tests
           syntax-only: true
           verbose: true
       - name: Run local action (compile)
         uses: ./
         with:
+          include: tests
           verbose: true
       - name: Print compiled files
         run: '(Get-ChildItem -Recurse -Path . -Include *.ex[45]).fullname'

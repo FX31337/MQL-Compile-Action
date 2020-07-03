@@ -11,6 +11,9 @@ inputs:
     description: 'Path to compile'
     required: true
     default: '.'
+  include:
+    description: 'Path for includes'
+    default: '.'
   mt-version:
     description: 'MetaTrader platform version to use'
     required: false
