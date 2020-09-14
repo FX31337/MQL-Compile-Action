@@ -1,4 +1,5 @@
 const fs = require('fs');
+const os = require('os');
 const Q = require('Q');
 const StreamZip = require('node-stream-zip');
 const url = require('url');
@@ -99,7 +100,7 @@ try {
 
           input.verbose && console.log(`Executing: ${command}`);
 
-          exec(command, error => {
+          exec(os.platform === 'win32' ? command : `wine ${command}`, error => {
             if (error && !fs.existsSync(input.logFilePath)) {
               throw new Error(error);
             }
