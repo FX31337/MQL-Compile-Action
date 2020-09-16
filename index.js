@@ -1,9 +1,10 @@
 const fs = require('fs');
-const Q = require('Q');
+const Q = require('q');
 const StreamZip = require('node-stream-zip');
 const url = require('url');
 const core = require('@actions/core');
 const { exec } = require('child_process');
+const createComment = require('./comment');
 
 // Set this to false if you want to test the action locally via:
 // $ ncc build && node index.js
@@ -111,6 +112,8 @@ try {
             input.verbose && console.log('Log output:');
             input.verbose && console.log(log);
 
+            const warnings = log.split('\n').filter(line => (/: warning (\d+):/u).test(line));
+            const errors = log.split('\n').filter(line => (/: error (\d+):/u).test(line));
             let errorCheckingRule;
             if (input.ignoreWarnings) errorCheckingRule = /[1-9]+[0-9]* error/u;
             else errorCheckingRule = /[1-9]+[0-9]* (warning|error)/u;
@@ -118,6 +121,8 @@ try {
             if (errorCheckingRule.test(log)) {
               input.verbose &&
                 console.log('Warnings/errors occurred. Returning exit code 1.');
+              createComment(warnings, errors);
+
               throw new Error('Compilation failed!');
             }
 
