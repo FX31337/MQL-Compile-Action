@@ -1690,7 +1690,7 @@ try {
 
           input.verbose && console.log(`Executing: ${command}`);
 
-          exec(command, error => {
+          exec(command, async error => {
             if (error && !fs.existsSync(input.logFilePath)) {
               throw new Error(error);
             }
@@ -1711,9 +1711,9 @@ try {
             if (errorCheckingRule.test(log)) {
               input.verbose &&
                 console.log('Warnings/errors occurred. Returning exit code 1.');
-              createComment(warnings, errors);
-
-              throw new Error('Compilation failed!');
+              await createComment(warnings, errors);
+              core.setFailed('Compilation failed!');
+              return;
             }
 
             exec(`rm "${metaEditorZipPath}"`, () => {
@@ -9704,15 +9704,14 @@ function getBody(warnings, errors) {
     return `Compilation Warnings:\n${warnings.join('\n')}\n\nCompilation Errors:\n${errors.join('\n')}\n`;
 }
 
-module.exports = (warnings, errors) => {
+module.exports = async (warnings, errors) => {
     const payload = github.context.payload;
-
-    console.log(payload);
-    console.log(github.context.eventName);
-    if (github.context.eventName !== 'pull_request')
+    if (github.context.eventName !== 'pull_request') {
       return;
+    }
+
     const octokit = github.getOctokit(core.getInput('github-token'));
-    octokit.issues.createComment({
+    await octokit.issues.createComment({
       owner: payload.repository.owner.login,
       repo: payload.repository.name,
       issue_number: payload.number, // eslint-disable-line camelcase

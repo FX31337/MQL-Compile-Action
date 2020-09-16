@@ -100,7 +100,7 @@ try {
 
           input.verbose && console.log(`Executing: ${command}`);
 
-          exec(command, error => {
+          exec(command, async error => {
             if (error && !fs.existsSync(input.logFilePath)) {
               throw new Error(error);
             }
@@ -121,9 +121,9 @@ try {
             if (errorCheckingRule.test(log)) {
               input.verbose &&
                 console.log('Warnings/errors occurred. Returning exit code 1.');
-              createComment(warnings, errors);
-
-              throw new Error('Compilation failed!');
+              await createComment(warnings, errors);
+              core.setFailed('Compilation failed!');
+              return;
             }
 
             exec(`rm "${metaEditorZipPath}"`, () => {
