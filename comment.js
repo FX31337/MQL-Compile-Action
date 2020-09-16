@@ -8,6 +8,7 @@ function getBody(warnings, errors) {
 module.exports = (warnings, errors) => {
     const payload = github.context.payload;
 
+    console.log(github.context.eventName);
     if (github.context.eventName !== 'pull_request')
       return;
     const octokit = github.getOctokit(core.getInput('github-token'));

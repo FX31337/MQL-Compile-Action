@@ -15,4 +15,8 @@
 /**
  * Initialization function.
  */
-int OnInit() { return INIT_SUCCEEDED; }
+int OnInit() {
+  int a = "a";
+  string b = new string(1);
+  return INIT_SUCCEEDED;
+}
