@@ -6,7 +6,7 @@ on:
   - push
 
 jobs:
-  Local:
+  Windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
@@ -24,3 +24,18 @@ jobs:
       - name: Print compiled files
         run: '(Get-ChildItem -Recurse -Path . -Include *.ex[45]).fullname'
         shell: powershell
+  Linux:
+    runs-on: ubuntu-latest
+    container:
+      image: ea31337/ea-tester:dev
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run local action (syntax only)
+        uses: ./
+        with:
+          syntax-only: true
+          verbose: true
+      - name: Run local action (compile)
+        uses: ./
+        with:
+          verbose: true

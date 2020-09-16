@@ -1589,6 +1589,7 @@ module.exports = {
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 const fs = __webpack_require__(747);
+const os = __webpack_require__(87);
 const Q = __webpack_require__(216);
 const StreamZip = __webpack_require__(976);
 const url = __webpack_require__(835);
@@ -1690,7 +1691,7 @@ try {
 
           input.verbose && console.log(`Executing: ${command}`);
 
-          exec(command, async error => {
+          exec(os.platform() === 'win32' ? command : `wine ${command}`, async error => {
             if (error && !fs.existsSync(input.logFilePath)) {
               throw new Error(error);
             }
