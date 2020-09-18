@@ -96,42 +96,50 @@ try {
           if (error) throw new Error(error);
 
           const checkSyntaxParam = input.checkSyntaxOnly ? '/s' : '';
-          const exeFile = metaTraderMajorVersion === '5' ? "MetaTrader 5/metaeditor64.exe" : "MetaTrader 4/metaeditor.exe";
+          const exeFile = metaTraderMajorVersion === '5' ? 'MetaTrader 5/metaeditor64.exe' : 'MetaTrader 4/metaeditor.exe';
           const command = `"${exeFile}" /compile:"${input.compilePath}" /inc:"${input.includePath}" /log:"${input.logFilePath}" ${checkSyntaxParam}`;
 
           input.verbose && console.log(`Executing: ${command}`);
 
-          exec(os.platform() === 'win32' ? command : `wine ${command}`, async error => {
-            if (error && !fs.existsSync(input.logFilePath)) {
-              throw new Error(error);
+          exec(
+            os.platform() === 'win32' ? command : `wine ${command}`,
+            async error => {
+              if (error && !fs.existsSync(input.logFilePath)) {
+                throw new Error(error);
+              }
+
+              const log = fs.
+                readFileSync(input.logFilePath, 'utf-16le').
+                toString('utf8');
+
+              input.verbose && console.log('Log output:');
+              input.verbose && console.log(log);
+
+              const warnings = log.
+                split('\n').
+                filter(line => (/: warning (\d+):/u).test(line));
+              const errors = log.
+                split('\n').
+                filter(line => (/: error (\d+):/u).test(line));
+              let errorCheckingRule;
+              if (input.ignoreWarnings)
+                errorCheckingRule = /[1-9]+[0-9]* error/u;
+              else errorCheckingRule = /[1-9]+[0-9]* (warning|error)/u;
+
+              if (errorCheckingRule.test(log)) {
+                input.verbose &&
+                  console.log('Warnings/errors occurred. Returning exit code 1.');
+                await createComment(warnings, errors);
+                core.setFailed('Compilation failed!');
+                return;
+              }
+
+              exec(`rm "${metaEditorZipPath}"`, () => {
+                if (input.metaTraderCleanUp)
+                  exec(`rm -R "MetaTrader ${metaTraderMajorVersion}"`);
+              });
             }
-
-            const log = fs.
-              readFileSync(input.logFilePath, 'utf-16le').
-              toString('utf8');
-
-            input.verbose && console.log('Log output:');
-            input.verbose && console.log(log);
-
-            const warnings = log.split('\n').filter(line => (/: warning (\d+):/u).test(line));
-            const errors = log.split('\n').filter(line => (/: error (\d+):/u).test(line));
-            let errorCheckingRule;
-            if (input.ignoreWarnings) errorCheckingRule = /[1-9]+[0-9]* error/u;
-            else errorCheckingRule = /[1-9]+[0-9]* (warning|error)/u;
-
-            if (errorCheckingRule.test(log)) {
-              input.verbose &&
-                console.log('Warnings/errors occurred. Returning exit code 1.');
-              await createComment(warnings, errors);
-              core.setFailed('Compilation failed!');
-              return;
-            }
-
-            exec(`rm "${metaEditorZipPath}"`, () => {
-              if (input.metaTraderCleanUp)
-                exec(`rm -R "MetaTrader ${metaTraderMajorVersion}"`);
-            });
-          });
+          );
         });
       });
       zip.on('error', error => {
