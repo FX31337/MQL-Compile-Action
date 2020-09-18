@@ -11,6 +11,9 @@ inputs:
     description: 'Path to compile'
     required: true
     default: '.'
+  github-token:
+    description: 'secret token'
+    required: true
   include:
     description: 'Path for includes'
     default: '.'
