@@ -57,7 +57,7 @@ module.exports = {
       }
     ],
     'comma-style': ['error', 'last'],
-    complexity: 'error',
+    complexity: ['error', { max: 30 }],
     'computed-property-spacing': ['error', 'never'],
     'consistent-return': 'error',
     'consistent-this': 'error',

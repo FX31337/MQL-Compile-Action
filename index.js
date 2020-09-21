@@ -1,15 +1,16 @@
+const Path = require('path');
 const fs = require('fs');
 const os = require('os');
 const Q = require('q');
 const StreamZip = require('node-stream-zip');
 const url = require('url');
 const core = require('@actions/core');
-const { exec } = require('child_process');
+const { execSync } = require('child_process');
 const createComment = require('./comment');
 
 // Set this to false if you want to test the action locally via:
 // $ ncc build && node index.js
-const realRun = true;
+const realRun = false;
 let input;
 
 if (realRun) {
@@ -24,7 +25,9 @@ if (realRun) {
     metaTraderCleanUp:
       (core.getInput('mt-cleanup') || 'false').toUpperCase() === 'TRUE',
     metaTraderVersion: core.getInput('mt-version'),
-    verbose: (core.getInput('verbose') || 'false').toUpperCase() === 'TRUE'
+    verbose: (core.getInput('verbose') || 'false').toUpperCase() === 'TRUE',
+    initPlatform:
+      (core.getInput('platform-init') || 'true').toUpperCase() === 'TRUE'
   };
 } else {
   input = {
@@ -33,9 +36,10 @@ if (realRun) {
     ignoreWarnings: false,
     includePath: '.',
     logFilePath: 'my-custom-log.log',
-    metaTraderCleanUp: true,
+    metaTraderCleanUp: false,
     metaTraderVersion: '5.0.0.2361',
-    verbose: true
+    verbose: true,
+    initPlatform: true
   };
 }
 
@@ -73,6 +77,22 @@ function download(uri, filename) {
   return deferred.promise;
 }
 
+const deleteFolderRecursive = function (path) {
+  if (fs.existsSync(path)) {
+    fs.readdirSync(path).forEach(file => {
+      const curPath = Path.join(path, file);
+      if (fs.lstatSync(curPath).isDirectory()) {
+        // Recurse
+        deleteFolderRecursive(curPath);
+      } else {
+        // Delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(path);
+  }
+};
+
 const metaTraderMajorVersion = input.metaTraderVersion[0];
 const metaTraderDownloadUrl = `https://github.com/EA31337/MT-Platforms/releases/download/${input.metaTraderVersion}/mt-${input.metaTraderVersion}.zip`;
 const metaEditorZipPath = `metaeditor${metaTraderMajorVersion}.zip`;
@@ -92,54 +112,84 @@ try {
       });
 
       zip.on('ready', () => {
-        zip.extract(null, '.', error => {
+        zip.extract(null, '.', async error => {
           if (error) throw new Error(error);
 
+          if (input.initPlatform) {
+            const configFilePath = os.tmpdir() + Path.sep + 'tester.ini';
+            fs.writeFileSync(
+              configFilePath,
+              '[Tester]\r\nShutdownTerminal=1\r\n'
+            );
+
+            const exeFile =
+              metaTraderMajorVersion === '5'
+                ? 'MetaTrader 5/terminal64.exe'
+                : 'MetaTrader 4/terminal.exe';
+            const command = `"${exeFile}" /config:${configFilePath}`;
+
+            input.verbose && console.log(`Executing: ${command}`);
+
+            try {
+              execSync(os.platform() === 'win32' ? command : `wine ${command}`);
+            } catch (e) {
+              // Silencing any error.
+              if (e.error) {
+                console.log(`Error: ${e.error}`);
+                core.setFailed('Compilation failed!');
+              }
+            }
+          }
+
           const checkSyntaxParam = input.checkSyntaxOnly ? '/s' : '';
-          const exeFile = metaTraderMajorVersion === '5' ? 'MetaTrader 5/metaeditor64.exe' : 'MetaTrader 4/metaeditor.exe';
+          const exeFile =
+            metaTraderMajorVersion === '5'
+              ? 'MetaTrader 5/metaeditor64.exe'
+              : 'MetaTrader 4/metaeditor.exe';
           const command = `"${exeFile}" /compile:"${input.compilePath}" /inc:"${input.includePath}" /log:"${input.logFilePath}" ${checkSyntaxParam}`;
 
           input.verbose && console.log(`Executing: ${command}`);
 
-          exec(
-            os.platform() === 'win32' ? command : `wine ${command}`,
-            async error => {
-              if (error && !fs.existsSync(input.logFilePath)) {
-                throw new Error(error);
-              }
-
-              const log = fs.
-                readFileSync(input.logFilePath, 'utf-16le').
-                toString('utf8');
-
-              input.verbose && console.log('Log output:');
-              input.verbose && console.log(log);
-
-              const warnings = log.
-                split('\n').
-                filter(line => (/: warning (\d+):/u).test(line));
-              const errors = log.
-                split('\n').
-                filter(line => (/: error (\d+):/u).test(line));
-              let errorCheckingRule;
-              if (input.ignoreWarnings)
-                errorCheckingRule = /[1-9]+[0-9]* error/u;
-              else errorCheckingRule = /[1-9]+[0-9]* (warning|error)/u;
-
-              if (errorCheckingRule.test(log)) {
-                input.verbose &&
-                  console.log('Warnings/errors occurred. Returning exit code 1.');
-                await createComment(warnings, errors);
-                core.setFailed('Compilation failed!');
-                return;
-              }
-
-              exec(`rm "${metaEditorZipPath}"`, () => {
-                if (input.metaTraderCleanUp)
-                  exec(`rm -R "MetaTrader ${metaTraderMajorVersion}"`);
-              });
+          try {
+            execSync(os.platform() === 'win32' ? command : `wine ${command}`);
+          } catch (e) {
+            if (e.error) {
+              console.log(`Error: ${e.error}`);
             }
-          );
+          }
+
+          const log = fs.
+            readFileSync(input.logFilePath, 'utf-16le').
+            toString('utf8');
+
+          input.verbose && console.log('Log output:');
+          input.verbose && console.log(log);
+
+          const warnings = log.
+            split('\n').
+            filter(line => (/: warning (\d+):/u).test(line));
+          const errors = log.
+            split('\n').
+            filter(line => (/: error (\d+):/u).test(line));
+          let errorCheckingRule;
+          if (input.ignoreWarnings) errorCheckingRule = /[1-9]+[0-9]* error/u;
+          else errorCheckingRule = /[1-9]+[0-9]* (warning|error)/u;
+
+          if (errorCheckingRule.test(log)) {
+            input.verbose &&
+              console.log('Warnings/errors occurred. Returning exit code 1.');
+            await createComment(warnings, errors);
+            core.setFailed('Compilation failed!');
+            return;
+          }
+
+          if (input.metaTraderCleanUp) {
+            input.verbose && console.log('Cleaning up...');
+            fs.unlinkSync(metaEditorZipPath);
+            deleteFolderRecursive(`MetaTrader ${metaTraderMajorVersion}`);
+          }
+
+          input.verbose && console.log('Done.');
         });
       });
       zip.on('error', error => {
