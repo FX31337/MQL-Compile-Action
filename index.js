@@ -7,10 +7,12 @@ const url = require('url');
 const core = require('@actions/core');
 const { execSync } = require('child_process');
 const createComment = require('./comment');
+const isWsl = require('is-wsl');
 
 // Set this to false if you want to test the action locally via:
 // $ ncc build && node index.js
-const realRun = false;
+const realRun = true;
+
 let input;
 
 if (realRun) {
@@ -27,19 +29,19 @@ if (realRun) {
     metaTraderVersion: core.getInput('mt-version'),
     verbose: (core.getInput('verbose') || 'false').toUpperCase() === 'TRUE',
     initPlatform:
-      (core.getInput('platform-init') || 'true').toUpperCase() === 'TRUE'
+      (core.getInput('init-platform') || 'false').toUpperCase() === 'TRUE'
   };
 } else {
   input = {
     checkSyntaxOnly: false,
     compilePath: '.',
     ignoreWarnings: false,
-    includePath: '.',
+    includePath: '',
     logFilePath: 'my-custom-log.log',
     metaTraderCleanUp: false,
     metaTraderVersion: '5.0.0.2361',
     verbose: true,
-    initPlatform: true
+    initPlatform: false
   };
 }
 
@@ -98,6 +100,18 @@ const metaTraderDownloadUrl = `https://github.com/EA31337/MT-Platforms/releases/
 const metaEditorZipPath = `metaeditor${metaTraderMajorVersion}.zip`;
 
 try {
+  deleteFolderRecursive(`../MetaTrader`);
+} catch (e) {
+  // Silence the error.
+}
+
+try {
+  fs.unlinkSync(input.logFilePath);
+} catch (e) {
+  // Silence the error.
+}
+
+try {
   input.verbose &&
     console.log(`Downloading "${metaTraderDownloadUrl}" into "${metaEditorZipPath}"...`);
   download(metaTraderDownloadUrl, metaEditorZipPath).
@@ -112,11 +126,23 @@ try {
       });
 
       zip.on('ready', () => {
-        zip.extract(null, '.', async error => {
+        zip.extract(null, '../', async error => {
           if (error) throw new Error(error);
 
+          const renameFrom = `../MetaTrader ${metaTraderMajorVersion}`;
+          const renameTo = '../MetaTrader';
+
+          try {
+            input.verbose &&
+              console.log(`Renaming MetaTrader's folder from "${renameFrom}" into "${renameTo}"...`);
+            fs.renameSync(renameFrom, renameTo);
+          } catch (e) {
+            input.verbose && console.log("Cannot rename MetaTrader's folder!");
+            throw e;
+          }
+
           if (input.initPlatform) {
-            const configFilePath = os.tmpdir() + Path.sep + 'tester.ini';
+            const configFilePath = 'tester.ini';
             fs.writeFileSync(
               configFilePath,
               '[Tester]\r\nShutdownTerminal=1\r\n'
@@ -124,14 +150,14 @@ try {
 
             const exeFile =
               metaTraderMajorVersion === '5'
-                ? 'MetaTrader 5/terminal64.exe'
-                : 'MetaTrader 4/terminal.exe';
-            const command = `"${exeFile}" /config:${configFilePath}`;
+                ? '../MetaTrader/terminal64.exe'
+                : '../MetaTrader/terminal.exe';
+            const command = `"${exeFile}" /portable /config:${configFilePath}`;
 
             input.verbose && console.log(`Executing: ${command}`);
 
             try {
-              execSync(os.platform() === 'win32' ? command : `wine ${command}`);
+              execSync(os.platform() === 'win32' || isWsl ? command : `wine ${command}`);
             } catch (e) {
               // Silencing any error.
               if (e.error) {
@@ -141,17 +167,21 @@ try {
             }
           }
 
+          const includePath =
+            input.includePath === ''
+              ? `../MetaTrader/MQL${metaTraderMajorVersion}`
+              : input.includePath;
           const checkSyntaxParam = input.checkSyntaxOnly ? '/s' : '';
           const exeFile =
             metaTraderMajorVersion === '5'
-              ? 'MetaTrader 5/metaeditor64.exe'
-              : 'MetaTrader 4/metaeditor.exe';
-          const command = `"${exeFile}" /compile:"${input.compilePath}" /inc:"${input.includePath}" /log:"${input.logFilePath}" ${checkSyntaxParam}`;
+              ? '../MetaTrader/metaeditor64.exe'
+              : '../MetaTrader/metaeditor.exe';
+          const command = `"${exeFile}" /portable /inc:"${includePath}" /compile:"${input.compilePath}" /log:"${input.logFilePath}" ${checkSyntaxParam}`;
 
           input.verbose && console.log(`Executing: ${command}`);
 
           try {
-            execSync(os.platform() === 'win32' ? command : `wine ${command}`);
+            execSync(os.platform() === 'win32' || isWsl ? command : `wine ${command}`);
           } catch (e) {
             if (e.error) {
               console.log(`Error: ${e.error}`);
@@ -164,6 +194,9 @@ try {
 
           input.verbose && console.log('Log output:');
           input.verbose && console.log(log);
+
+          if (input.verbose && log.includes('..\\MetaTrader\\MQL'))
+            console.log(`Please check if you enabled "init-platform" for a MQL-Compile-Action as it looks like your code makes use of built-in MT's libraries!\n`);
 
           const warnings = log.
             split('\n').
@@ -186,7 +219,7 @@ try {
           if (input.metaTraderCleanUp) {
             input.verbose && console.log('Cleaning up...');
             fs.unlinkSync(metaEditorZipPath);
-            deleteFolderRecursive(`MetaTrader ${metaTraderMajorVersion}`);
+            deleteFolderRecursive(`../MetaTrader`);
           }
 
           input.verbose && console.log('Done.');

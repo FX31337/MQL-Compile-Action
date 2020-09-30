@@ -90,6 +90,12 @@ Specifies log filename for compilation messages.
 
 Whether to skip generating binary file and only check for syntax issues. Default: *false*.
 
+### `init-platform` (bool)
+
+Whether to run terminal(64).exe which downloads general-purpose MQL4/5 includes, example scripts and EAs.
+
+It is required if you want to use e.g., `#include <Arrays/Array.mqh>` and so on.
+
 ### `verbose` (bool)
 
 Enables verbose mode (to print more messages). Default: *false*.

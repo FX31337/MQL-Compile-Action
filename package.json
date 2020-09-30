@@ -5,7 +5,7 @@
   "main": "lib/main.js",
   "scripts": {
     "build": "ncc build",
-    "format": "prettier --write '*.js' && eslint --fix *.js",
+    "format": "prettier --write '*.js' dist/index.js && eslint --fix *.js dist/index.js",
     "format-check": "eslint *.js",
     "lint": "eslint *.js",
     "package": "ncc build index.js -o dist",
@@ -33,6 +33,9 @@
     "@actions/io": "^1.0",
     "encoding": "^0.1.12",
     "eslint-plugin-jest": "^23.13.2",
+    "glob": "^7.1.6",
+    "is-docker": "^2.1.1",
+    "is-wsl": "^2.2.0",
     "prettier": "^2.0.5"
   },
   "devDependencies": {
