@@ -57,7 +57,7 @@ module.exports = {
       }
     ],
     'comma-style': ['error', 'last'],
-    complexity: 'error',
+    complexity: ['error', { max: 30 }],
     'computed-property-spacing': ['error', 'never'],
     'consistent-return': 'error',
     'consistent-this': 'error',
@@ -114,7 +114,7 @@ module.exports = {
     'max-statements': 'off',
     'max-statements-per-line': 'off',
     'multiline-comment-style': ['error', 'separate-lines'],
-    'multiline-ternary': ['error', 'never'],
+    'multiline-ternary': ['off'],
     'new-cap': 'error',
     'new-parens': 'error',
     'newline-after-var': 'off',
