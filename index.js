@@ -198,21 +198,43 @@ try {
           if (input.verbose && log.includes('..\\MetaTrader\\MQL'))
             console.log(`Please check if you enabled "init-platform" for a MQL-Compile-Action as it looks like your code makes use of built-in MT's libraries!\n`);
 
-          const warnings = log.
-            split('\n').
-            filter(line => (/: warning (\d+):/u).test(line));
-          const errors = log.
-            split('\n').
-            filter(line => (/: error (\d+):/u).test(line));
-          let errorCheckingRule;
-          if (input.ignoreWarnings) errorCheckingRule = /[1-9]+[0-9]* error/u;
-          else errorCheckingRule = /[1-9]+[0-9]* (warning|error)/u;
+          const errorCheckingRuleWarning = /(.*warning [0-9]+:.*)/gu;
+          const errorCheckingRuleError = /(.*error [0-9]+:.*)/gu;
 
-          if (errorCheckingRule.test(log)) {
+          const wereErrorsFound = errorCheckingRuleError.test(log);
+          const wereWarningsFound =
+            !input.ignoreWarnings && errorCheckingRuleWarning.test(log);
+
+          if (wereErrorsFound || wereWarningsFound) {
             input.verbose &&
               console.log('Warnings/errors occurred. Returning exit code 1.');
+
+            // Composing error string.
+            let errorText = 'Compilation failed!';
+
+            const errors = [...log.matchAll(errorCheckingRuleError)];
+
+            if (errors.length > 0) {
+              errorText += '\n\nErrors found:\n';
+              for (const message of errors) {
+                errorText += `\n* ${message[0]}`;
+              }
+            }
+
+            const warnings = [...log.matchAll(errorCheckingRuleWarning)];
+
+            if (warnings.length > 0) {
+              if (input.ignoreWarnings)
+                errorText += '\n\n(Ignored) warnings found:\n';
+              else errorText += '\n\nWarnings found:\n';
+
+              for (const message of warnings) {
+                errorText += `\n* ${message[0]}`;
+              }
+            }
+
             await createComment(warnings, errors);
-            core.setFailed('Compilation failed!');
+            core.setFailed(errorText);
             return;
           }
 
