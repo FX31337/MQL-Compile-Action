@@ -480,6 +480,12 @@ module.exports = /******/ (function (modules, runtime) {
       const createComment = __webpack_require__(463);
       const isWsl = __webpack_require__(625);
 
+      // Unhandled promise rejections will end up as GHA action failure.
+      // Thus way we don't need to check for all possible errors.
+      process.on('unhandledRejection', error => {
+        core.setFailed(error ? error : 'Unknown error occurred!');
+      });
+
       // Set this to false if you want to test the action locally via:
       // $ ncc build && node index.js
       const realRun = true;
