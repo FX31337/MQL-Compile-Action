@@ -8,6 +8,7 @@ const core = require('@actions/core');
 const { execSync } = require('child_process');
 const createComment = require('./comment');
 const isWsl = require('is-wsl');
+const glob = require('glob');
 
 // Unhandled promise rejections will end up as GHA action failure.
 // Thus way we don't need to check for all possible errors.
@@ -17,7 +18,7 @@ process.on('unhandledRejection', error => {
 
 // Set this to false if you want to test the action locally via:
 // $ ncc build && node index.js
-const realRun = true;
+const realRun = false;
 
 let input;
 
@@ -40,7 +41,7 @@ if (realRun) {
 } else {
   input = {
     checkSyntaxOnly: false,
-    compilePath: '.',
+    compilePath: './**/*.mq5',
     ignoreWarnings: false,
     includePath: '',
     logFilePath: 'my-custom-log.log',
@@ -182,66 +183,80 @@ try {
             metaTraderMajorVersion === '5'
               ? '../MetaTrader/metaeditor64.exe'
               : '../MetaTrader/metaeditor.exe';
-          const command = `"${exeFile}" /portable /inc:"${includePath}" /compile:"${input.compilePath}" /log:"${input.logFilePath}" ${checkSyntaxParam}`;
 
-          input.verbose && console.log(`Executing: ${command}`);
+          let files = [];
 
-          try {
-            execSync(os.platform() === 'win32' || isWsl ? command : `wine ${command}`);
-          } catch (e) {
-            if (e.error) {
-              console.log(`Error: ${e.error}`);
-            }
-          }
+          if (input.compilePath.includes('*'))
+            files = glob(input.compilePath, { sync: true });
+          else files = [input.compilePath];
 
-          const log = fs.
-            readFileSync(input.logFilePath, 'utf-16le').
-            toString('utf8');
+          input.verbose && console.log(`Files to compile: ${files}`);
 
-          input.verbose && console.log('Log output:');
-          input.verbose && console.log(log);
+          // Compiling each file separately and checking log's output every time, as it always fresh.
+          for (const path of files) {
+            const command = `"${exeFile}" /portable /inc:"${includePath}" /compile:"${path}" /log:"${input.logFilePath}" ${checkSyntaxParam}`;
 
-          if (input.verbose && log.includes('..\\MetaTrader\\MQL'))
-            console.log(`Please check if you enabled "init-platform" for a MQL-Compile-Action as it looks like your code makes use of built-in MT's libraries!\n`);
+            input.verbose && console.log(`Executing: ${command}`);
 
-          const errorCheckingRuleWarning = /(.*warning [0-9]+:.*)/gu;
-          const errorCheckingRuleError = /(.*error [0-9]+:.*)/gu;
-
-          const wereErrorsFound = errorCheckingRuleError.test(log);
-          const wereWarningsFound =
-            !input.ignoreWarnings && errorCheckingRuleWarning.test(log);
-
-          if (wereErrorsFound || wereWarningsFound) {
-            input.verbose &&
-              console.log('Warnings/errors occurred. Returning exit code 1.');
-
-            // Composing error string.
-            let errorText = 'Compilation failed!';
-
-            const errors = [...log.matchAll(errorCheckingRuleError)];
-
-            if (errors.length > 0) {
-              errorText += '\n\nErrors found:\n';
-              for (const message of errors) {
-                errorText += `\n* ${message[0]}`;
+            try {
+              execSync(os.platform() === 'win32' || isWsl ? command : `wine ${command}`);
+            } catch (e) {
+              if (e.error) {
+                console.log(`Error: ${e.error}`);
               }
             }
 
-            const warnings = [...log.matchAll(errorCheckingRuleWarning)];
+            const log = fs.
+              readFileSync(input.logFilePath, 'utf-16le').
+              toString('utf8');
 
-            if (warnings.length > 0) {
-              if (input.ignoreWarnings)
-                errorText += '\n\n(Ignored) warnings found:\n';
-              else errorText += '\n\nWarnings found:\n';
+            input.verbose && console.log('Log output:');
+            input.verbose && console.log(log);
 
-              for (const message of warnings) {
-                errorText += `\n* ${message[0]}`;
+            if (input.verbose && log.includes('..\\MetaTrader\\MQL'))
+              console.log(`Please check if you enabled "init-platform" for a MQL-Compile-Action as it looks like your code makes use of built-in MT's libraries!\n`);
+
+            const errorCheckingRuleWarning = /(.*warning [0-9]+:.*)/gu;
+            const errorCheckingRuleError = /(.*error [0-9]+:.*)/gu;
+
+            const wereErrorsFound = errorCheckingRuleError.test(log);
+            const wereWarningsFound =
+              !input.ignoreWarnings && errorCheckingRuleWarning.test(log);
+
+            if (wereErrorsFound || wereWarningsFound) {
+              input.verbose &&
+                console.log('Warnings/errors occurred. Returning exit code 1.');
+
+              // Composing error string.
+              let errorText = 'Compilation failed!';
+
+              const errors = [...log.matchAll(errorCheckingRuleError)];
+
+              if (errors.length > 0) {
+                errorText += '\n\nErrors found:\n';
+                for (const message of errors) {
+                  errorText += `\n* ${message[0]}`;
+                }
               }
-            }
 
-            await createComment(warnings, errors);
-            core.setFailed(errorText);
-            return;
+              const warnings = [...log.matchAll(errorCheckingRuleWarning)];
+
+              if (warnings.length > 0) {
+                if (input.ignoreWarnings)
+                  errorText += '\n\n(Ignored) warnings found:\n';
+                else errorText += '\n\nWarnings found:\n';
+
+                for (const message of warnings) {
+                  errorText += `\n* ${message[0]}`;
+                }
+              }
+
+              /* eslint-disable */
+              await createComment(warnings, errors);
+              /* eslint-enable */
+              core.setFailed(errorText);
+              return;
+            }
           }
 
           if (input.metaTraderCleanUp) {
