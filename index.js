@@ -18,7 +18,7 @@ process.on('unhandledRejection', error => {
 
 // Set this to false if you want to test the action locally via:
 // $ ncc build && node index.js
-const realRun = false;
+const realRun = true;
 
 let input;
 
