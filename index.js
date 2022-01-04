@@ -1,5 +1,5 @@
 const Path = require('path');
-const fs = require('fs');
+const fs = require('fs-extra');
 const os = require('os');
 const Q = require('q');
 const StreamZip = require('node-stream-zip');
@@ -9,6 +9,7 @@ const { execSync } = require('child_process');
 const createComment = require('./comment');
 const isWsl = require('is-wsl');
 const glob = require('glob');
+const crypto = require('crypto');
 
 // Unhandled promise rejections will end up as GHA action failure.
 // Thus way we don't need to check for all possible errors.
@@ -104,10 +105,16 @@ const deleteFolderRecursive = function (path) {
 
 const metaTraderMajorVersion = input.metaTraderVersion[0];
 const metaTraderDownloadUrl = `https://github.com/EA31337/MT-Platforms/releases/download/${input.metaTraderVersion}/mt-${input.metaTraderVersion}.zip`;
-const metaEditorZipPath = `metaeditor${metaTraderMajorVersion}.zip`;
+const randomUuid = crypto.randomBytes(16).toString('hex');
+const metaEditorZipPath = `metaeditor${metaTraderMajorVersion}_${randomUuid}.zip`;
+const metaTraderTargetFolderName = 'MetaTrader_' + randomUuid;
+
+const metaTraderTargetFolderAbsolutePath = Path.resolve(`../${metaTraderTargetFolderName}`);
+
+console.log(`::set-output name=platform_folder::${metaTraderTargetFolderAbsolutePath}`);
 
 try {
-  deleteFolderRecursive(`../MetaTrader`);
+  deleteFolderRecursive(`../${metaTraderTargetFolderName}`);
 } catch (e) {
   // Silence the error.
 }
@@ -133,16 +140,18 @@ try {
       });
 
       zip.on('ready', () => {
-        zip.extract(null, '../', async error => {
+        const zipTargetPath = `../unpacked/${randomUuid}`;
+        fs.mkdirSync(zipTargetPath, { recursive: true });
+        zip.extract(null, zipTargetPath, async error => {
           if (error) throw new Error(error);
 
-          const renameFrom = `../MetaTrader ${metaTraderMajorVersion}`;
-          const renameTo = '../MetaTrader';
+          const renameFrom = `${zipTargetPath}/MetaTrader ${metaTraderMajorVersion}`;
+          const renameTo = `../${metaTraderTargetFolderName}`;
 
           try {
             input.verbose &&
               console.log(`Renaming MetaTrader's folder from "${renameFrom}" into "${renameTo}"...`);
-            fs.renameSync(renameFrom, renameTo);
+            fs.moveSync(renameFrom, renameTo);
           } catch (e) {
             input.verbose && console.log("Cannot rename MetaTrader's folder!");
             throw e;
@@ -157,8 +166,8 @@ try {
 
             const exeFile =
               metaTraderMajorVersion === '5'
-                ? '../MetaTrader/terminal64.exe'
-                : '../MetaTrader/terminal.exe';
+                ? `../${metaTraderTargetFolderName}/terminal64.exe`
+                : `../${metaTraderTargetFolderName}/terminal.exe`;
             const command = `"${exeFile}" /portable /config:${configFilePath}`;
 
             input.verbose && console.log(`Executing: ${command}`);
@@ -176,13 +185,13 @@ try {
 
           const includePath =
             input.includePath === ''
-              ? `../MetaTrader/MQL${metaTraderMajorVersion}`
+              ? `../${metaTraderTargetFolderName}/MQL${metaTraderMajorVersion}`
               : input.includePath;
           const checkSyntaxParam = input.checkSyntaxOnly ? '/s' : '';
           const exeFile =
             metaTraderMajorVersion === '5'
-              ? '../MetaTrader/metaeditor64.exe'
-              : '../MetaTrader/metaeditor.exe';
+              ? `../${metaTraderTargetFolderName}/metaeditor64.exe`
+              : `../${metaTraderTargetFolderName}/metaeditor.exe`;
 
           let files = [];
 
@@ -262,7 +271,7 @@ try {
           if (input.metaTraderCleanUp) {
             input.verbose && console.log('Cleaning up...');
             fs.unlinkSync(metaEditorZipPath);
-            deleteFolderRecursive(`../MetaTrader`);
+            deleteFolderRecursive(`../${metaTraderTargetFolderName}`);
           }
 
           input.verbose && console.log('Done.');
