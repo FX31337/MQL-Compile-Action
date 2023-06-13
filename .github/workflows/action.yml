@@ -9,7 +9,7 @@ jobs:
   Windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Run local action (syntax only)
         uses: ./
         with:
@@ -29,7 +29,7 @@ jobs:
     container:
       image: ea31337/ea-tester:dev
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Run local action (syntax only)
         uses: ./
         with:
