@@ -6,7 +6,7 @@
 [![Status][gha-image-test-master]][gha-link-test-master]
 [![Telegram Channel][tg-channel-image]][tg-channel-link]
 [![Telegram Chat][tg-chat-image]][tg-chat-link]
-[![Edit][gitpod-image]][gitpod-link]
+[![Edit][gh-edit-badge]][gh-edit-link]
 
 This GitHub Action compiles MQL programs.
 
@@ -110,6 +110,9 @@ Enables verbose mode (to print more messages). Default: *false*.
 [github-release-image]: https://img.shields.io/github/release/FX31337/MQL-Compile-Action.svg?logo=github
 [github-release-link]: https://github.com/FX31337/MQL-Compile-Action/releases
 
+[gh-edit-badge]: https://img.shields.io/badge/GitHub-edit-purple.svg?logo=github
+[gh-edit-link]: https://github.dev/FX31337/MQL-Compile-Action
+
 [tg-channel-image]: https://img.shields.io/badge/Telegram-news-0088CC.svg?logo=telegram
 [tg-channel-link]: https://t.me/EA31337_News
 [tg-chat-image]: https://img.shields.io/badge/Telegram-chat-0088CC.svg?logo=telegram
@@ -121,6 +124,3 @@ Enables verbose mode (to print more messages). Default: *false*.
 [gha-image-lint-master]: https://github.com/FX31337/MQL-Compile-Action/workflows/Lint/badge.svg
 [gha-link-test-master]: https://github.com/FX31337/MQL-Compile-Action/actions?query=workflow%3ATest+branch%3Amaster
 [gha-image-test-master]: https://github.com/FX31337/MQL-Compile-Action/workflows/Test/badge.svg
-
-[gitpod-image]: https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod
-[gitpod-link]: https://gitpod.io/#https://github.com/FX31337/MQL-Compile-Action
