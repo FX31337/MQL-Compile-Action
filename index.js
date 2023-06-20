@@ -87,37 +87,10 @@ function download(uri, filename) {
   return deferred.promise;
 }
 
-const deleteFolderRecursive = function (path) {
-  if (fs.existsSync(path)) {
-    fs.readdirSync(path).forEach(file => {
-      const curPath = Path.join(path, file);
-      if (fs.lstatSync(curPath).isDirectory()) {
-        // Recurse
-        deleteFolderRecursive(curPath);
-      } else {
-        // Delete file
-        fs.unlinkSync(curPath);
-      }
-    });
-    fs.rmdirSync(path);
-  }
-};
-
 const metaTraderMajorVersion = input.metaTraderVersion[0];
 const metaTraderDownloadUrl = `https://github.com/EA31337/MT-Platforms/releases/download/${input.metaTraderVersion}/mt-${input.metaTraderVersion}.zip`;
 const randomUuid = crypto.randomBytes(16).toString('hex');
 const metaEditorZipPath = `metaeditor${metaTraderMajorVersion}_${randomUuid}.zip`;
-const metaTraderTargetFolderName = 'MetaTrader_' + randomUuid;
-
-const metaTraderTargetFolderAbsolutePath = Path.resolve(metaTraderTargetFolderName);
-
-console.log(`::set-output name=platform_folder::${metaTraderTargetFolderAbsolutePath}`);
-
-try {
-  deleteFolderRecursive(metaTraderTargetFolderName);
-} catch (e) {
-  // Silence the error.
-}
 
 try {
   fs.unlinkSync(input.logFilePath);
@@ -145,18 +118,12 @@ try {
       await zip.extract(null, zipTargetPath);
       await zip.close();
 
-      const renameFrom = `${zipTargetPath}/MetaTrader ${metaTraderMajorVersion}`;
-      const renameTo = metaTraderTargetFolderName;
+      const metaTraderTargetFolderName = `${zipTargetPath}/MetaTrader ${metaTraderMajorVersion}`;
+      const metaTraderTargetFolderAbsolutePath = Path.resolve(metaTraderTargetFolderName);
 
-      try {
-        input.verbose &&
-          console.log(`Renaming MetaTrader's folder from "${renameFrom}" into "${renameTo}"...`);
-        fs.copySync(renameFrom, renameTo);
-        fs.rm(zipTargetPath, { recursive: true });
-      } catch (e) {
-        input.verbose && console.log("Cannot rename MetaTrader's folder!");
-        throw e;
-      }
+      console.log(`::set-output name=platform_folder::${metaTraderTargetFolderAbsolutePath}`);
+
+      console.log(`We will use MT in folder "${metaTraderTargetFolderAbsolutePath}".`);
 
       if (input.initPlatform) {
         const configFilePath = 'tester.ini';
