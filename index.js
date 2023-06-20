@@ -180,9 +180,16 @@ try {
           }
         }
 
-        const log = fs.
-          readFileSync(input.logFilePath, 'utf-16le').
-          toString('utf8');
+        let log;
+
+        try {
+          log = fs.
+            readFileSync(input.logFilePath, 'utf-16le').
+            toString('utf8');
+        } catch (e) {
+          console.log(`Missing log file "${input.logFilePath}".`);
+          log = "No log file found.\n";
+        }
 
         input.verbose && console.log('Log output:');
         input.verbose && console.log(log);
