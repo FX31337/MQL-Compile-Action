@@ -166,6 +166,9 @@ try {
 
       input.verbose && console.log(`Files to compile: ${files}`);
 
+      if (!fs.existsSync(includePath))
+        throw new Error(`Directory at include path "${includePath}" not found!`);
+
       // Compiling each file separately and checking log's output every time, as it always fresh.
       for (const path of files) {
         const command = `"${exeFile}" /portable /inc:"${includePath}" /compile:"${path}" /log:"${input.logFilePath}" ${checkSyntaxParam}`;
