@@ -33,9 +33,11 @@ jobs:
       - name: Run local action (syntax only)
         uses: ./
         with:
+          include: tests
           syntax-only: true
           verbose: true
       - name: Run local action (compile)
         uses: ./
         with:
+          include: tests
           verbose: true
