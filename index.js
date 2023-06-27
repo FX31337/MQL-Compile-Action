@@ -127,13 +127,19 @@ try {
 
       if (input.initPlatform) {
         const configFilePath = 'tester.ini';
-        fs.writeFileSync(configFilePath, '[Tester]\r\nShutdownTerminal=1\r\n');
+        fs.writeFileSync(
+          configFilePath,
+          '[Tester]\r\nShutdownTerminal=1\r\nTestExpert=Dummy\r\nTestShutdownTerminal=true\r\n'
+        );
 
         const exeFile =
           metaTraderMajorVersion === '5'
             ? `${metaTraderTargetFolderName}/terminal64.exe`
             : `${metaTraderTargetFolderName}/terminal.exe`;
-        const command = `"${exeFile}" /portable /config:${configFilePath}`;
+        const command =
+          metaTraderMajorVersion === '5'
+            ? `"${exeFile}" /portable /config:${configFilePath}`
+            : `"${exeFile}" /portable ${configFilePath}`;
 
         input.verbose && console.log(`Executing: ${command}`);
 
@@ -186,12 +192,10 @@ try {
         let log;
 
         try {
-          log = fs.
-            readFileSync(input.logFilePath, 'utf-16le').
-            toString('utf8');
+          log = fs.readFileSync(input.logFilePath, 'utf-16le').toString('utf8');
         } catch (e) {
           console.log(`Missing log file "${input.logFilePath}".`);
-          log = "No log file found.\n";
+          log = 'No log file found.\n';
         }
 
         input.verbose && console.log('Log output:');

@@ -27864,13 +27864,19 @@ try {
 
       if (input.initPlatform) {
         const configFilePath = 'tester.ini';
-        fs.writeFileSync(configFilePath, '[Tester]\r\nShutdownTerminal=1\r\n');
+        fs.writeFileSync(
+          configFilePath,
+          '[Tester]\r\nShutdownTerminal=1\r\nTestExpert=Dummy\r\nTestShutdownTerminal=true\r\n'
+        );
 
         const exeFile =
           metaTraderMajorVersion === '5'
             ? `${metaTraderTargetFolderName}/terminal64.exe`
             : `${metaTraderTargetFolderName}/terminal.exe`;
-        const command = `"${exeFile}" /portable /config:${configFilePath}`;
+        const command =
+          metaTraderMajorVersion === '5'
+            ? `"${exeFile}" /portable /config:${configFilePath}`
+            : `"${exeFile}" /portable ${configFilePath}`;
 
         input.verbose && console.log(`Executing: ${command}`);
 
@@ -27884,6 +27890,7 @@ try {
           }
         }
       }
+
 
       const includePath =
         input.includePath === ''
