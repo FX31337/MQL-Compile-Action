@@ -47,5 +47,5 @@ inputs:
     default: false
 runs:
   using: node16
-  main: dist/index.js
-  post: dist/index.js
+  main: index.js
+  post: index.js
