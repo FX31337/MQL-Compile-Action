@@ -27779,12 +27779,13 @@ if (realRun) {
 } else {
   input = {
     checkSyntaxOnly: false,
-    compilePath: './**/*.mq5',
+    compilePath: './**/*.mq?',
     ignoreWarnings: false,
     includePath: '',
     logFilePath: 'my-custom-log.log',
     metaTraderCleanUp: true,
-    metaTraderVersion: '5.0.0.2361',
+    // E.g. 4.0.0.1382, 5.0.0.2361
+    metaTraderVersion: '4.0.0.1382',
     verbose: true,
     initPlatform: false
   };
@@ -27851,22 +27852,22 @@ try {
       });
       /* eslint-enable */
 
-      const zipTargetPath = `unpacked/${randomUuid}`;
+      const zipTargetPath = `.platform/${randomUuid}`;
       await zip.extract(null, zipTargetPath);
       await zip.close();
 
-      const metaTraderTargetFolderName = `${zipTargetPath}/MetaTrader ${metaTraderMajorVersion}`;
-      const metaTraderTargetFolderAbsolutePath = Path.resolve(metaTraderTargetFolderName);
+      const metaTraderTargetFolderName = glob.sync(`${zipTargetPath}/*${metaTraderMajorVersion}*`)[0];
+      const platformPathAbs = Path.resolve(metaTraderTargetFolderName);
 
-      console.log(`::set-output name=platform_folder::${metaTraderTargetFolderAbsolutePath}`);
-
-      console.log(`We will use MT in folder "${metaTraderTargetFolderAbsolutePath}".`);
+      // Write variable to environment file.
+      fs.writeFileSync('.env', `platform_folder=${platformPathAbs}`);
+      console.log(`Platform path: "${platformPathAbs}".`);
 
       if (input.initPlatform) {
-        const configFilePath = 'tester.ini';
+        const configFilePath = `tester.ini`;
         fs.writeFileSync(
           configFilePath,
-          '[Tester]\r\nShutdownTerminal=1\r\nTestExpert=Dummy\r\nTestShutdownTerminal=true\r\n'
+          '[Tester]\r\nShutdownTerminal=true\r\nTestExpert=Dummy\r\nTestShutdownTerminal=true\r\n'
         );
 
         const exeFile =
@@ -27875,22 +27876,27 @@ try {
             : `${metaTraderTargetFolderName}/terminal.exe`;
         const command =
           metaTraderMajorVersion === '5'
-            ? `"${exeFile}" /portable /config:${configFilePath}`
-            : `"${exeFile}" /portable ${configFilePath}`;
+            ? `"${exeFile}" /log:CON /portable /config:${configFilePath}`
+            : `"${exeFile}" /log:CON /portable ${configFilePath}`;
 
         input.verbose && console.log(`Executing: ${command}`);
 
         try {
-          execSync(os.platform() === 'win32' || isWsl ? command : `wine ${command}`);
+          const cmdOptions = { stdio: 'inherit',
+timeout: 20000 };
+          execSync(
+            os.platform() === 'win32' || isWsl ? command : `wine ${command}`,
+            cmdOptions
+          );
+          console.log('Initialization completed.');
         } catch (e) {
           // Silencing any error.
           if (e.error) {
             console.log(`Error: ${e.error}`);
-            core.setFailed('Compilation failed!');
+            core.setFailed('Initialization failed!');
           }
         }
       }
-
 
       const includePath =
         input.includePath === ''
@@ -27910,6 +27916,9 @@ try {
 
       input.verbose && console.log(`Files to compile: ${files}`);
 
+      if (!fs.existsSync(includePath))
+        throw new Error(`Directory at include path "${includePath}" not found!`);
+
       // Compiling each file separately and checking log's output every time, as it always fresh.
       for (const path of files) {
         const command = `"${exeFile}" /portable /inc:"${includePath}" /compile:"${path}" /log:"${input.logFilePath}" ${checkSyntaxParam}`;
@@ -27917,7 +27926,7 @@ try {
         input.verbose && console.log(`Executing: ${command}`);
 
         try {
-          execSync(os.platform() === 'win32' || isWsl ? command : `wine ${command}`, { timeout: 20000 });
+          execSync(os.platform() === 'win32' || isWsl ? command : `wine ${command}`);
         } catch (e) {
           if (e.error) {
             console.log(`Error: ${e.error}`);
@@ -27927,12 +27936,10 @@ try {
         let log;
 
         try {
-          log = fs.
-            readFileSync(input.logFilePath, 'utf-16le').
-            toString('utf8');
+          log = fs.readFileSync(input.logFilePath, 'utf-16le').toString('utf8');
         } catch (e) {
           console.log(`Missing log file "${input.logFilePath}".`);
-          log = "No log file found.\n";
+          log = 'No log file found.\n';
         }
 
         input.verbose && console.log('Log output:');
@@ -27988,7 +27995,7 @@ try {
         input.verbose && console.log('Cleaning up...');
         fs.rm(metaEditorZipPath, { recursive: true });
         fs.rm(metaTraderTargetFolderName, { recursive: true });
-        fs.rm('unpacked', { recursive: true });
+        fs.rm('.platform', { recursive: true });
       }
 
       input.verbose && console.log('Done.');
