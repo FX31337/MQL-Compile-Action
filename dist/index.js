@@ -27917,7 +27917,7 @@ try {
         input.verbose && console.log(`Executing: ${command}`);
 
         try {
-          execSync(os.platform() === 'win32' || isWsl ? command : `wine ${command}`);
+          execSync(os.platform() === 'win32' || isWsl ? command : `wine ${command}`, { timeout: 20000 });
         } catch (e) {
           if (e.error) {
             console.log(`Error: ${e.error}`);
