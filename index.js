@@ -123,7 +123,9 @@ try {
       const platformPathAbs = Path.resolve(metaTraderTargetFolderName);
 
       // Write variable to environment file.
-      fs.writeFileSync('.env', `platform_folder=${platformPathAbs}`);
+      /* eslint no-process-env: "off" */
+      const envFile = process.env.GITHUB_ENV || '.env';
+      fs.writeFileSync(envFile, `MT${metaTraderMajorVersion}_PATH=${platformPathAbs}`);
       console.log(`Platform path: "${platformPathAbs}".`);
 
       if (input.initPlatform) {
