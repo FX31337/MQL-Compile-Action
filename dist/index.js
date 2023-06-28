@@ -27893,7 +27893,6 @@ timeout: 20000 };
           // Silencing any error.
           if (e.error) {
             console.log(`Error: ${e.error}`);
-            core.setFailed('Initialization failed!');
           }
         }
       }
