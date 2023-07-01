@@ -37,7 +37,8 @@ if (realRun) {
     metaTraderVersion: core.getInput('mt-version'),
     verbose: (core.getInput('verbose') || 'false').toUpperCase() === 'TRUE',
     initPlatform:
-      (core.getInput('init-platform') || 'false').toUpperCase() === 'TRUE'
+      (core.getInput('init-platform') || 'false').toUpperCase() === 'TRUE',
+    workingDirectory: core.getInput('working-directory') || '.'
   };
 } else {
   input = {
@@ -47,10 +48,11 @@ if (realRun) {
     includePath: '',
     logFilePath: 'my-custom-log.log',
     metaTraderCleanUp: true,
+    initPlatform: false,
     // E.g. 4.0.0.1382, 5.0.0.2361
     metaTraderVersion: '4.0.0.1382',
     verbose: true,
-    initPlatform: false
+    workingDirectory: '.'
   };
 }
 
@@ -100,6 +102,7 @@ try {
 }
 
 try {
+  process.chdir(input.workingDirectory);
   input.verbose &&
     console.log(`Downloading "${metaTraderDownloadUrl}" into "${metaEditorZipPath}"...`);
   download(metaTraderDownloadUrl, metaEditorZipPath).

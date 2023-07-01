@@ -45,6 +45,10 @@ inputs:
     description: 'Enables verbose mode (to print more messages)'
     required: false
     default: false
+  working-directory:
+    description: 'Working directory where to run commands'
+    required: false
+    default: '.'
 runs:
   using: node16
   main: dist/index.js

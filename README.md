@@ -100,6 +100,10 @@ It is required if you want to use e.g., `#include <Arrays/Array.mqh>` and so on.
 
 Enables verbose mode (to print more messages). Default: *false*.
 
+### `working-directory` (string)
+
+Sets working directory where to run commands. Default: *.*.
+
 ### Support
 
 - For bugs/features, raise a [new issue at GitHub](https://github.com/EA31337/MQL-Compile-Action/issues).
