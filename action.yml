@@ -11,6 +11,10 @@ inputs:
     description: 'Path to compile'
     required: true
     default: '.'
+  path-ignore:
+    description: 'Path for compiler to ignore'
+    required: false
+    default: '**/*.mqh'
   github-token:
     description: 'secret token'
     required: true

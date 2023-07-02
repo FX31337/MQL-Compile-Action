@@ -27765,6 +27765,7 @@ if (realRun) {
     checkSyntaxOnly:
       (core.getInput('syntax-only') || 'false').toUpperCase() === 'TRUE',
     compilePath: core.getInput('path'),
+    compilePathIgnore: core.getInput('path-ignore'),
     ignoreWarnings:
       (core.getInput('ignore-warnings') || 'false').toUpperCase() === 'TRUE',
     includePath: core.getInput('include'),
@@ -27781,6 +27782,7 @@ if (realRun) {
   input = {
     checkSyntaxOnly: false,
     compilePath: './**/*.mq?',
+    compilePathIgnore: './**/*.mqh',
     ignoreWarnings: false,
     includePath: '',
     logFilePath: 'my-custom-log.log',
@@ -27865,7 +27867,10 @@ try {
       // Write variable to environment file.
       /* eslint no-process-env: "off" */
       const envFile = process.env.GITHUB_ENV || '.env';
-      fs.writeFileSync(envFile, `MT${metaTraderMajorVersion}_PATH=${platformPathAbs}`);
+      fs.writeFileSync(
+        envFile,
+        `MT${metaTraderMajorVersion}_PATH=${platformPathAbs}`
+      );
       console.log(`Platform path: "${platformPathAbs}".`);
 
       if (input.initPlatform) {
@@ -27915,7 +27920,10 @@ timeout: 20000 };
       let files = [];
 
       if (input.compilePath.includes('*'))
-        files = glob(input.compilePath, { sync: true });
+        files = glob(input.compilePath, {
+          ignore: input.compilePathIgnore,
+          sync: true
+        });
       else files = [input.compilePath];
 
       input.verbose && console.log(`Files to compile: ${files}`);

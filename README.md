@@ -64,6 +64,12 @@ Path to folder or file to compile.
 
 Default: `.` (all files in the current folder are compiled).
 
+### `path-ignore` (string)
+
+Path to folder or file for compiler to ignore.
+
+Default: `**/*.mqh` (all .mqh files are ignored by default).
+
 ### `include` (string)
 
 Path to search for includes files.
