@@ -170,9 +170,10 @@ timeout: 20000 };
         }
       }
 
+      const includePathDefault = input.initPlatform ? `${metaTraderTargetFolderName}/MQL${metaTraderMajorVersion}` : '';
       const includePath =
         input.includePath === ''
-          ? `${metaTraderTargetFolderName}/MQL${metaTraderMajorVersion}`
+          ? includePathDefault
           : input.includePath;
       const checkSyntaxParam = input.checkSyntaxOnly ? '/s' : '';
       const exeFile =
@@ -191,12 +192,13 @@ timeout: 20000 };
 
       input.verbose && console.log(`Files to compile: ${files}`);
 
-      if (!fs.existsSync(includePath))
+      if (input.includePath !== '' && !fs.existsSync(includePath))
         throw new Error(`Directory at include path "${includePath}" not found!`);
 
       // Compiling each file separately and checking log's output every time, as it always fresh.
       for (const path of files) {
-        const command = `"${exeFile}" /portable /inc:"${includePath}" /compile:"${path}" /log:"${input.logFilePath}" ${checkSyntaxParam}`;
+        const cmdArgInc = input.includePath === '' ? '' : `/inc:"${includePath}"`;
+        const command = `"${exeFile}" /portable ${cmdArgInc} /compile:"${path}" /log:"${input.logFilePath}" ${checkSyntaxParam}`;
 
         input.verbose && console.log(`Executing: ${command}`);
 

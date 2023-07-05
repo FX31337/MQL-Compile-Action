@@ -74,7 +74,7 @@ Default: `**/*.mqh` (all .mqh files are ignored by default).
 
 Path to search for includes files.
 
-Default: `.`.
+Default: ``.
 
 ### `mt-version` (string)
 
