@@ -76,13 +76,9 @@ Path to search for includes files.
 
 Default: ``.
 
-### `mt-version` (string)
+### `mt-path` (string)
 
-MetaTrader platform version to use. Default: *5.0.0.2361*.
-
-### `mt-cleanup` (bool)
-
-Whether to remove extracted metaeditor files after compilation. Default: *true*.
+Platform path to use. Default: `.platform`.
 
 ### `ignore-warnings` (bool)
 
