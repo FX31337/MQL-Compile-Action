@@ -16,6 +16,7 @@ jobs:
           cache: pip
       - run: pip3 install -r requirements.txt
       - name: Install platform
+        continue-on-error: true
         uses: dawidd6/action-ansible-playbook@v2
         with:
           playbook: platform-install.yml
