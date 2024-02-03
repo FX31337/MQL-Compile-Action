@@ -10,9 +10,11 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ConorMacBride/install-package@v1
+      - uses: actions/setup-python@v5
         with:
-          choco: ansible
+          python-version: '3.9'
+          cache: pip
+      - run: pip3 install -r requirements.txt
       - name: Install platform
         uses: dawidd6/action-ansible-playbook@v2
         with:
