@@ -808,8 +808,8 @@
           return __awaiter(this, void 0, void 0, function* () {
             const httpclient = OidcClient.createHttpClient();
             const res = yield httpclient.getJson(id_token_url).catch(error => {
-              throw new Error(`Failed to get ID Token. \n
-        Error Code : ${error.statusCode}\n
+              throw new Error(`Failed to get ID Token. \n 
+        Error Code : ${error.statusCode}\n 
         Error Message: ${error.result.message}`);
             });
             const id_token =
@@ -18459,10 +18459,10 @@
        */
       function parseURL(urlStr) {
         /*
-          Check whether the URL is absolute or not
-          Scheme: https://tools.ietf.org/html/rfc3986#section-3.1
-          Absolute URL: https://tools.ietf.org/html/rfc3986#section-4.3
-        */
+ 	Check whether the URL is absolute or not
+ 		Scheme: https://tools.ietf.org/html/rfc3986#section-3.1
+ 	Absolute URL: https://tools.ietf.org/html/rfc3986#section-4.3
+ */
         if (/^[a-zA-Z][a-zA-Z\d+\-.]*:/.exec(urlStr)) {
           urlStr = new URL(urlStr).toString();
         }
@@ -23220,8 +23220,6 @@
       };
     }
 
-    const platformMajorVersion = 5;
-
     try {
       fs.unlinkSync(input.logFilePath);
     } catch (e) {
@@ -23231,33 +23229,37 @@
     try {
       process.chdir(input.workingDirectory);
 
-      // Const platformPath = glob.sync(`${zipTargetPath}/*${platformMajorVersion}*`)[0];
-      const platformPathAbs = Path.resolve(input.platformPath);
-
-      // Write variable to environment file.
-      /* eslint no-process-env: "off" */
-      const envFile = process.env.GITHUB_ENV || '.env';
-      fs.writeFileSync(
-        envFile,
-        `MT${platformMajorVersion}_PATH=${platformPathAbs}`
+      const configFilePath = `tester.ini`;
+      const terminal64Exe = glob.sync(
+        Path.join(input.platformPath, '**', 'terminal64.exe')
       );
-      console.log(`Platform path: "${platformPathAbs}".`);
+      const terminal32Exe = glob.sync(
+        Path.join(input.platformPath, '**', 'terminal.exe')
+      );
+      const terminalExe =
+        terminal64Exe.length > 0 ? `${terminal64Exe}` : `${terminal32Exe}`;
+      const platformPath = Path.dirname(terminalExe);
+      // Const platformPathAbs = Path.resolve(glob.sync(platformPath)[0]);
 
-      if (input.initPlatform) {
-        const configFilePath = `tester.ini`;
+      console.log(`Terminal path: "${terminalExe}".`);
+
+      if (terminal32Exe.length > 0) {
         fs.writeFileSync(
           configFilePath,
           '[Tester]\r\nShutdownTerminal=true\r\nTestExpert=Dummy\r\nTestShutdownTerminal=true\r\n'
         );
+      }
+      const includePath =
+        input.includePath === ''
+          ? Path.join(platformPath, terminal64Exe.length > 0 ? 'MQL5' : 'MQL4')
+          : input.includePath;
 
-        const exeFile =
-          platformMajorVersion === '5'
-            ? `${platformPathAbs}/terminal64.exe`
-            : `${platformPathAbs}/terminal.exe`;
-        const command =
-          platformMajorVersion === '5'
-            ? `"${exeFile}" /log:CON /portable /config:${configFilePath}`
-            : `"${exeFile}" /log:CON /portable ${configFilePath}`;
+      if (input.initPlatform) {
+        const command = `"${terminalExe}" /log:CON /portable ${
+          terminal64Exe.length > 0
+            ? `"/config:${configFilePath}"`
+            : `"${configFilePath}"`
+        }`;
 
         input.verbose && console.log(`Executing: ${command}`);
 
@@ -23276,16 +23278,7 @@
         }
       }
 
-      const includePathDefault = input.initPlatform
-        ? `${input.platformPath}/MQL${platformMajorVersion}`
-        : '';
-      const includePath =
-        input.includePath === '' ? includePathDefault : input.includePath;
       const checkSyntaxParam = input.checkSyntaxOnly ? '/s' : '';
-      const exeFile =
-        platformMajorVersion === '5'
-          ? `${input.platformPath}/metaeditor64.exe`
-          : `${input.platformPath}/metaeditor.exe`;
 
       let files = [];
 
@@ -23307,7 +23300,7 @@
       for (const path of files) {
         const cmdArgInc =
           input.includePath === '' ? '' : `/inc:"${includePath}"`;
-        const command = `"${exeFile}" /portable ${cmdArgInc} /compile:"${path}" /log:"${input.logFilePath}" ${checkSyntaxParam}`;
+        const command = `"${terminalExe}" /portable ${cmdArgInc} /compile:"${path}" /log:"${input.logFilePath}" ${checkSyntaxParam}`;
 
         input.verbose && console.log(`Executing: ${command}`);
 
@@ -23333,7 +23326,7 @@
         input.verbose && console.log('Log output:');
         input.verbose && console.log(log);
 
-        if (input.verbose && log.includes(`${input.platformPath}\\MQL`))
+        if (input.verbose && log.includes(`${platformPath}\\MQL`))
           console.log(
             `Please check if you enabled "init-platform" for a MQL-Compile-Action as it looks like your code makes use of built-in MT's libraries!\n`
           );

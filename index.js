@@ -50,8 +50,6 @@ if (realRun) {
   };
 }
 
-const platformMajorVersion = 5;
-
 try {
   fs.unlinkSync(input.logFilePath);
 } catch (e) {
@@ -61,33 +59,33 @@ try {
 try {
   process.chdir(input.workingDirectory);
 
-  // Const platformPath = glob.sync(`${zipTargetPath}/*${platformMajorVersion}*`)[0];
-  const platformPathAbs = Path.resolve(input.platformPath);
+  const configFilePath = `tester.ini`;
+  const terminal64Exe = glob.sync(Path.join(input.platformPath, '**', 'terminal64.exe'));
+  const terminal32Exe = glob.sync(Path.join(input.platformPath, '**', 'terminal.exe'));
+  const terminalExe =
+    terminal64Exe.length > 0 ? `${terminal64Exe}` : `${terminal32Exe}`;
+  const platformPath = Path.dirname(terminalExe);
+  // Const platformPathAbs = Path.resolve(glob.sync(platformPath)[0]);
 
-  // Write variable to environment file.
-  /* eslint no-process-env: "off" */
-  const envFile = process.env.GITHUB_ENV || '.env';
-  fs.writeFileSync(
-    envFile,
-    `MT${platformMajorVersion}_PATH=${platformPathAbs}`
-  );
-  console.log(`Platform path: "${platformPathAbs}".`);
+  console.log(`Terminal path: "${terminalExe}".`);
 
-  if (input.initPlatform) {
-    const configFilePath = `tester.ini`;
+  if (terminal32Exe.length > 0) {
     fs.writeFileSync(
       configFilePath,
       '[Tester]\r\nShutdownTerminal=true\r\nTestExpert=Dummy\r\nTestShutdownTerminal=true\r\n'
     );
+  }
+  const includePath =
+    input.includePath === ''
+      ? Path.join(platformPath, terminal64Exe.length > 0 ? 'MQL5' : 'MQL4')
+      : input.includePath;
 
-    const exeFile =
-      platformMajorVersion === '5'
-        ? `${platformPathAbs}/terminal64.exe`
-        : `${platformPathAbs}/terminal.exe`;
-    const command =
-      platformMajorVersion === '5'
-        ? `"${exeFile}" /log:CON /portable /config:${configFilePath}`
-        : `"${exeFile}" /log:CON /portable ${configFilePath}`;
+  if (input.initPlatform) {
+    const command = `"${terminalExe}" /log:CON /portable ${
+      terminal64Exe.length > 0
+        ? `"/config:${configFilePath}"`
+        : `"${configFilePath}"`
+    }`;
 
     input.verbose && console.log(`Executing: ${command}`);
 
@@ -107,16 +105,7 @@ timeout: 20000 };
     }
   }
 
-  const includePathDefault = input.initPlatform
-    ? `${input.platformPath}/MQL${platformMajorVersion}`
-    : '';
-  const includePath =
-    input.includePath === '' ? includePathDefault : input.includePath;
   const checkSyntaxParam = input.checkSyntaxOnly ? '/s' : '';
-  const exeFile =
-    platformMajorVersion === '5'
-      ? `${input.platformPath}/metaeditor64.exe`
-      : `${input.platformPath}/metaeditor.exe`;
 
   let files = [];
 
@@ -135,7 +124,7 @@ timeout: 20000 };
   // Compiling each file separately and checking log's output every time, as it always fresh.
   for (const path of files) {
     const cmdArgInc = input.includePath === '' ? '' : `/inc:"${includePath}"`;
-    const command = `"${exeFile}" /portable ${cmdArgInc} /compile:"${path}" /log:"${input.logFilePath}" ${checkSyntaxParam}`;
+    const command = `"${terminalExe}" /portable ${cmdArgInc} /compile:"${path}" /log:"${input.logFilePath}" ${checkSyntaxParam}`;
 
     input.verbose && console.log(`Executing: ${command}`);
 
@@ -159,7 +148,7 @@ timeout: 20000 };
     input.verbose && console.log('Log output:');
     input.verbose && console.log(log);
 
-    if (input.verbose && log.includes(`${input.platformPath}\\MQL`))
+    if (input.verbose && log.includes(`${platformPath}\\MQL`))
       console.log(`Please check if you enabled "init-platform" for a MQL-Compile-Action as it looks like your code makes use of built-in MT's libraries!\n`);
 
     const errorCheckingRuleWarning = /(.*warning [0-9]+:.*)/gu;

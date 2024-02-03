@@ -21,14 +21,6 @@ inputs:
   include:
     description: 'Path for includes'
     default: ''
-  mt-version:
-    description: 'MetaTrader platform version to use'
-    required: false
-    default: '5.0.0.2361'
-  mt-cleanup:
-    description: 'Whether to remove extracted metaeditor files after compilation'
-    required: false
-    default: false
   ignore-warnings:
     description: 'Whether to ignore compilation warnings'
     required: false
@@ -37,6 +29,10 @@ inputs:
     description: 'Specifies log filename for compilation messages.'
     required: false
     default: 'mql.log'
+  mt-path:
+    description: 'Platform path'
+    required: false
+    default: '.platform'
   syntax-only:
     description: 'Whether to check for syntax only (no binary file is generated)'
     required: false
