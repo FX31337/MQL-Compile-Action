@@ -9,6 +9,7 @@
     "format-check": "eslint *.js",
     "lint": "eslint *.js",
     "package": "ncc build index.js -o dist",
+    "release": "npm run package && npm run format",
     "test": "eslint *.js && jest"
   },
   "repository": {
