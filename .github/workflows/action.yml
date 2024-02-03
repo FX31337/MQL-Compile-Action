@@ -26,8 +26,6 @@ jobs:
         shell: powershell
   Linux:
     runs-on: ubuntu-latest
-    container:
-      image: ea31337/ea-tester:dev
     steps:
       - uses: actions/checkout@v3
       - name: Install platform
