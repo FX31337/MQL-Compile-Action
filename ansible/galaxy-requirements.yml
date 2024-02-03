@@ -3,7 +3,7 @@
 # ansible-galaxy install -r requirements.yml
 ---
 roles:
-  - name: ea31337.mt_runner
+  - name: ea31337.metatrader
     scm: git
-    src: https://github.com/EA31337/ansible-role-mt-runner.git
+    src: https://github.com/EA31337/ansible-role-metatrader.git
     version: dev
