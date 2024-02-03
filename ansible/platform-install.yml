@@ -1,0 +1,7 @@
+---
+- name: Installs platform
+  hosts: all
+  tasks:
+    - name: Imports main role
+      ansible.builtin.import_role:
+        name: ea31337.mt_runner
