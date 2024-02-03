@@ -7,6 +7,7 @@ on:
 
 jobs:
   Windows:
+    needs: Linux
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -66,6 +67,7 @@ jobs:
         uses: ./
         with:
           include: tests
+          mt-path: .wine/drive_c
           syntax-only: true
           verbose: true
       - name: Run local action (compile)
