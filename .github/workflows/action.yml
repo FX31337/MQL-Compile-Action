@@ -30,6 +30,20 @@ jobs:
       image: ea31337/ea-tester:dev
     steps:
       - uses: actions/checkout@v3
+      - name: Install platform
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: platform-install.yml
+          configuration: |
+            [defaults]
+            nocows = false
+            stdout_callback = yaml
+          directory: ./ansible
+          options: |
+            --connection local
+            --inventory localhost,
+            --verbose
+          requirements: galaxy-requirements.yml
       - name: Run local action (syntax only)
         uses: ./
         with:
