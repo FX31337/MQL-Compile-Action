@@ -71,12 +71,12 @@ jobs:
         uses: ./
         with:
           include: tests
-          mt-path: $HOME/.wine/drive_c
+          mt-path: ${{ github.workspace }}/.wine/drive_c
           syntax-only: true
           verbose: true
       - name: Run local action (compile)
         uses: ./
         with:
           include: tests
-          mt-path: $HOME/.wine/drive_c
+          mt-path: ${{ github.workspace }}/.wine/drive_c
           verbose: true
