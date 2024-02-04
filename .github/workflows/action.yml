@@ -15,26 +15,6 @@ jobs:
         with:
           name: platform-files
           path: .platform
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.9'
-          cache: pip
-      - run: pip3 install -r requirements.txt
-      - name: Install platform
-        continue-on-error: true
-        uses: dawidd6/action-ansible-playbook@v2
-        with:
-          playbook: platform-install.yml
-          configuration: |
-            [defaults]
-            nocows = false
-            stdout_callback = yaml
-          directory: ./ansible
-          options: |
-            --connection local
-            --inventory localhost,
-            --verbose
-          requirements: galaxy-requirements.yml
       - name: Run local action (syntax only)
         uses: ./
         with:
