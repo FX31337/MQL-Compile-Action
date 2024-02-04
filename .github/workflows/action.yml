@@ -43,7 +43,7 @@ jobs:
         with:
           path: ~/.cache
           key: cache-${{ hashFiles('.github/workflows/action.yml') }}
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ~/.wine
           key: wine-${{ hashFiles('.github/workflows/action.yml') }}
