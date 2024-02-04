@@ -49,6 +49,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: "$HOME/.wine/drive_c"
+          key: wine-${{ hashFiles('.github/workflows/action.yml') }}
       - name: Install platform
         uses: dawidd6/action-ansible-playbook@v2
         with:
@@ -67,12 +71,12 @@ jobs:
         uses: ./
         with:
           include: tests
-          mt-path: /home/runner/.wine/drive_c
+          mt-path: $HOME/.wine/drive_c
           syntax-only: true
           verbose: true
       - name: Run local action (compile)
         uses: ./
         with:
           include: tests
-          mt-path: /home/runner/.wine/drive_c
+          mt-path: $HOME/.wine/drive_c
           verbose: true
