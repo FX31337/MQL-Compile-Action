@@ -44,7 +44,7 @@ if (realRun) {
     ignoreWarnings: false,
     includePath: '',
     logFilePath: 'my-custom-log.log',
-    platformPath: '.platform',
+    platformPath: '.',
     initPlatform: false,
     verbose: true,
     workingDirectory: '.'
@@ -62,21 +62,22 @@ if (!isPost) {
     process.chdir(input.workingDirectory);
 
     const configFilePath = `tester.ini`;
-    const terminal64Exe =
-      glob.sync(Path.join(input.platformPath, '**', 'terminal64.exe'))[0] || '';
-    const terminal32Exe =
-      glob.sync(Path.join(input.platformPath, '**', 'terminal.exe'))[0] || '';
-    const terminalExe = terminal64Exe || terminal32Exe || '';
-    const platformPath = Path.dirname(terminalExe) || '';
+    const mte64Exe =
+      glob.sync(Path.join(input.platformPath, '**', 'metaeditor64.exe'))[0] ||
+      '';
+    const mte32Exe =
+      glob.sync(Path.join(input.platformPath, '**', 'metaeditor.exe'))[0] || '';
+    const mteExe = mte64Exe || mte32Exe || '';
+    const platformPath = Path.dirname(mteExe) || '';
     // Const platformPathAbs = Path.resolve(glob.sync(platformPath)[0]);
 
-    if (terminalExe.length > 0) {
-      input.verbose && console.log(`Terminal path: "${terminalExe}".`);
+    if (mteExe.length > 0) {
+      input.verbose && console.log(`MTE path: "${mteExe}".`);
     } else {
-      throw new Error(`Terminal cannot be found in "${input.platformPath}"!`);
+      throw new Error(`Platform cannot be found in "${input.platformPath}"!`);
     }
 
-    if (terminal32Exe.length > 0) {
+    if (mte32Exe.length > 0) {
       fs.writeFileSync(
         configFilePath,
         '[Tester]\r\nShutdownTerminal=true\r\nTestExpert=Dummy\r\nTestShutdownTerminal=true\r\n'
@@ -84,12 +85,12 @@ if (!isPost) {
     }
     const includePath =
       input.includePath === ''
-        ? Path.join(platformPath, terminal64Exe.length > 0 ? 'MQL5' : 'MQL4')
+        ? Path.join(platformPath, mte64Exe.length > 0 ? 'MQL5' : 'MQL4')
         : input.includePath;
 
     if (input.initPlatform) {
-      const command = `"${terminalExe}" /log:CON /portable ${
-        terminal64Exe.length > 0
+      const command = `"${mteExe}" /log:CON /portable ${
+        mte64Exe.length > 0
           ? `"/config:${configFilePath}"`
           : `"${configFilePath}"`
       }`;
@@ -131,7 +132,7 @@ timeout: 20000 };
     // Compiling each file separately and checking log's output every time, as it always fresh.
     for (const path of files) {
       const cmdArgInc = input.includePath === '' ? '' : `/inc:"${includePath}"`;
-      const command = `"${terminalExe}" /portable ${cmdArgInc} /compile:"${path}" /log:"${input.logFilePath}" ${checkSyntaxParam}`;
+      const command = `"${mteExe}" /portable ${cmdArgInc} /compile:"${path}" /log:"${input.logFilePath}" ${checkSyntaxParam}`;
 
       input.verbose && console.log(`Executing: ${command}`);
 
