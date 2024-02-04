@@ -10,7 +10,11 @@ jobs:
     needs: Linux
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: platform-files
+          path: .platform
       - uses: actions/setup-python@v5
         with:
           python-version: '3.9'
@@ -35,12 +39,14 @@ jobs:
         uses: ./
         with:
           include: tests
+          mt-path: .platform
           syntax-only: true
           verbose: true
       - name: Run local action (compile)
         uses: ./
         with:
           include: tests
+          mt-path: .platform
           verbose: true
       - name: Print compiled files
         run: '(Get-ChildItem -Recurse -Path . -Include *.ex[45]).fullname'
@@ -49,8 +55,8 @@ jobs:
   Linux:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/cache@v3
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
         with:
           path: ~/.cache
           key: cache-${{ hashFiles('.github/workflows/action.yml') }}
@@ -89,4 +95,8 @@ jobs:
           include: tests
           mt-path: /home/runner/.wine/drive_c
           verbose: true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: platform-files
+          path: ~/.wine/**/*.ex?
     timeout-minutes: 20
