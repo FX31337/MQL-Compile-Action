@@ -72,6 +72,8 @@ jobs:
             --verbose
           requirements: galaxy-requirements.yml
       - name: Run local action (syntax only)
+        env:
+          DISPLAY: :0
         uses: ./
         with:
           include: tests
@@ -79,6 +81,8 @@ jobs:
           syntax-only: true
           verbose: true
       - name: Run local action (compile)
+        env:
+          DISPLAY: :0
         uses: ./
         with:
           include: tests
