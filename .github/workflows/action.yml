@@ -31,6 +31,9 @@ jobs:
       - name: Print compiled files
         run: '(Get-ChildItem -Recurse -Path . -Include *.ex[45]).fullname'
         shell: powershell
+      - uses: geekyeggo/delete-artifact@v4
+        with:
+          name: platform-files
     timeout-minutes: 20
   Linux:
     runs-on: ubuntu-latest
