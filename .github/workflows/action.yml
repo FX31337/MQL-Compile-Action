@@ -46,8 +46,6 @@ jobs:
         run: '(Get-ChildItem -Recurse -Path . -Include *.ex[45]).fullname'
         shell: powershell
   Linux:
-    env:
-      HOME: ${{ github.workspace }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -73,12 +71,12 @@ jobs:
         uses: ./
         with:
           include: tests
-          mt-path: ${HOME}/.wine/drive_c
+          mt-path: ${{ env.HOME }}/.wine/drive_c
           syntax-only: true
           verbose: true
       - name: Run local action (compile)
         uses: ./
         with:
           include: tests
-          mt-path: ${HOME}/.wine/drive_c
+          mt-path: ${{ env.HOME }}/.wine/drive_c
           verbose: true
