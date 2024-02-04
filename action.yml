@@ -32,7 +32,7 @@ inputs:
   mt-path:
     description: 'Platform path'
     required: false
-    default: '.platform'
+    default: '.'
   syntax-only:
     description: 'Whether to check for syntax only (no binary file is generated)'
     required: false

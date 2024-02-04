@@ -60,14 +60,16 @@ try {
   process.chdir(input.workingDirectory);
 
   const configFilePath = `tester.ini`;
-  const terminal64Exe = glob.sync(Path.join(input.platformPath, '**', 'terminal64.exe'))[0];
-  const terminal32Exe = glob.sync(Path.join(input.platformPath, '**', 'terminal.exe'))[0];
+  const terminal64Exe =
+    glob.sync(Path.join(input.platformPath, '**', 'terminal64.exe'))[0] || '';
+  const terminal32Exe =
+    glob.sync(Path.join(input.platformPath, '**', 'terminal.exe'))[0] || '';
   const terminalExe = terminal64Exe || terminal32Exe || '';
-  const platformPath = Path.dirname(terminalExe);
+  const platformPath = Path.dirname(terminalExe) || '';
   // Const platformPathAbs = Path.resolve(glob.sync(platformPath)[0]);
 
   if (terminalExe.length > 0) {
-    console.log(`Terminal path: "${terminalExe}".`);
+    input.verbose && console.log(`Terminal path: "${terminalExe}".`);
   } else {
     throw new Error(`Terminal cannot be found in "${input.platformPath}"!`);
   }
@@ -99,11 +101,11 @@ timeout: 20000 };
         os.platform() === 'win32' || isWsl ? command : `wine ${command}`,
         cmdOptions
       );
-      console.log('Initialization completed.');
+      input.verbose && console.log('Initialization completed.');
     } catch (e) {
       // Silencing any error.
       if (e.error) {
-        console.log(`Error: ${e.error}`);
+        console.error(`Error: ${e.error}`);
       }
     }
   }

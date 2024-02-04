@@ -78,7 +78,7 @@ Default: ``.
 
 ### `mt-path` (string)
 
-Platform path to use. Default: `.platform`.
+Platform path to use. Default: `.`.
 
 ### `ignore-warnings` (bool)
 

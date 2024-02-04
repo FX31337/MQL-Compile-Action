@@ -808,8 +808,8 @@
           return __awaiter(this, void 0, void 0, function* () {
             const httpclient = OidcClient.createHttpClient();
             const res = yield httpclient.getJson(id_token_url).catch(error => {
-              throw new Error(`Failed to get ID Token. \n
-        Error Code : ${error.statusCode}\n
+              throw new Error(`Failed to get ID Token. \n 
+        Error Code : ${error.statusCode}\n 
         Error Message: ${error.result.message}`);
             });
             const id_token =
@@ -23199,7 +23199,7 @@
           'TRUE',
         includePath: core.getInput('include'),
         logFilePath: core.getInput('log-file'),
-        platformPath: core.getInput('mt-path'),
+        platformPath: core.getInput('mt-path') || '.',
         verbose: (core.getInput('verbose') || 'false').toUpperCase() === 'TRUE',
         initPlatform:
           (core.getInput('init-platform') || 'false').toUpperCase() === 'TRUE',
@@ -23230,18 +23230,17 @@
       process.chdir(input.workingDirectory);
 
       const configFilePath = `tester.ini`;
-      const terminal64Exe = glob.sync(
-        Path.join(input.platformPath, '**', 'terminal64.exe')
-      )[0];
-      const terminal32Exe = glob.sync(
-        Path.join(input.platformPath, '**', 'terminal.exe')
-      )[0];
+      const terminal64Exe =
+        glob.sync(Path.join(input.platformPath, '**', 'terminal64.exe'))[0] ||
+        '';
+      const terminal32Exe =
+        glob.sync(Path.join(input.platformPath, '**', 'terminal.exe'))[0] || '';
       const terminalExe = terminal64Exe || terminal32Exe || '';
-      const platformPath = Path.dirname(terminalExe);
+      const platformPath = Path.dirname(terminalExe) || '';
       // Const platformPathAbs = Path.resolve(glob.sync(platformPath)[0]);
 
       if (terminalExe.length > 0) {
-        console.log(`Terminal path: "${terminalExe}".`);
+        input.verbose && console.log(`Terminal path: "${terminalExe}".`);
       } else {
         throw new Error(`Terminal cannot be found in "${input.platformPath}"!`);
       }
@@ -23272,11 +23271,11 @@
             os.platform() === 'win32' || isWsl ? command : `wine ${command}`,
             cmdOptions
           );
-          console.log('Initialization completed.');
+          input.verbose && console.log('Initialization completed.');
         } catch (e) {
           // Silencing any error.
           if (e.error) {
-            console.log(`Error: ${e.error}`);
+            console.error(`Error: ${e.error}`);
           }
         }
       }
