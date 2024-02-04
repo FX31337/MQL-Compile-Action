@@ -78,5 +78,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: platform-files
-          path: ~/.wine/**/*.ex?
+          path: ~/.wine/drive_c/Program*/**/*.ex?
     timeout-minutes: 20
