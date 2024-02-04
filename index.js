@@ -60,14 +60,17 @@ try {
   process.chdir(input.workingDirectory);
 
   const configFilePath = `tester.ini`;
-  const terminal64Exe = glob.sync(Path.join(input.platformPath, '**', 'terminal64.exe'));
-  const terminal32Exe = glob.sync(Path.join(input.platformPath, '**', 'terminal.exe'));
-  const terminalExe =
-    terminal64Exe.length > 0 ? `${terminal64Exe}` : `${terminal32Exe}`;
+  const terminal64Exe = glob.sync(Path.join(input.platformPath, '**', 'terminal64.exe'))[0];
+  const terminal32Exe = glob.sync(Path.join(input.platformPath, '**', 'terminal.exe'))[0];
+  const terminalExe = terminal64Exe || terminal32Exe || '';
   const platformPath = Path.dirname(terminalExe);
   // Const platformPathAbs = Path.resolve(glob.sync(platformPath)[0]);
 
-  console.log(`Terminal path: "${terminalExe}".`);
+  if (terminalExe.length > 0) {
+    console.log(`Terminal path: "${terminalExe}".`);
+  } else {
+    throw new Error(`Terminal cannot be found in "${input.platformPath}"!`);
+  }
 
   if (terminal32Exe.length > 0) {
     fs.writeFileSync(
