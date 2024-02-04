@@ -75,12 +75,12 @@ jobs:
         uses: ./
         with:
           include: tests
-          mt-path: ${{ env.HOME }}/.wine/drive_c
+          mt-path: /home/runner/.wine/drive_c
           syntax-only: true
           verbose: true
       - name: Run local action (compile)
         uses: ./
         with:
           include: tests
-          mt-path: ${{ env.HOME }}/.wine/drive_c
+          mt-path: /home/runner/.wine/drive_c
           verbose: true
