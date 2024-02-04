@@ -29,7 +29,7 @@ if (realRun) {
       (core.getInput('ignore-warnings') || 'false').toUpperCase() === 'TRUE',
     includePath: core.getInput('include'),
     logFilePath: core.getInput('log-file'),
-    platformPath: core.getInput('mt-path'),
+    platformPath: core.getInput('mt-path') || '.',
     verbose: (core.getInput('verbose') || 'false').toUpperCase() === 'TRUE',
     initPlatform:
       (core.getInput('init-platform') || 'false').toUpperCase() === 'TRUE',
