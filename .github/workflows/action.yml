@@ -45,6 +45,7 @@ jobs:
       - name: Print compiled files
         run: '(Get-ChildItem -Recurse -Path . -Include *.ex[45]).fullname'
         shell: powershell
+    timeout-minutes: 20
   Linux:
     runs-on: ubuntu-latest
     steps:
@@ -88,3 +89,4 @@ jobs:
           include: tests
           mt-path: /home/runner/.wine/drive_c
           verbose: true
+    timeout-minutes: 20
