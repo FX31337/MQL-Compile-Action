@@ -808,8 +808,8 @@
           return __awaiter(this, void 0, void 0, function* () {
             const httpclient = OidcClient.createHttpClient();
             const res = yield httpclient.getJson(id_token_url).catch(error => {
-              throw new Error(`Failed to get ID Token. \n 
-        Error Code : ${error.statusCode}\n 
+              throw new Error(`Failed to get ID Token. \n
+        Error Code : ${error.statusCode}\n
         Error Message: ${error.result.message}`);
             });
             const id_token =
@@ -23385,6 +23385,7 @@
           }
         }
 
+        core.saveState('isPost', 'true');
         input.verbose && console.log('Done.');
       } catch (error) {
         core.setFailed(error.message);

@@ -205,6 +205,7 @@ timeout: 20000 };
       }
     }
 
+    core.saveState('isPost', 'true');
     input.verbose && console.log('Done.');
   } catch (error) {
     core.setFailed(error.message);
