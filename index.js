@@ -63,10 +63,13 @@ if (!isPost) {
 
     const configFilePath = `tester.ini`;
     const mte64Exe =
-      glob.sync(Path.join(input.platformPath, '**', 'metaeditor64.exe'))[0] ||
-      '';
+      glob.sync(Path.join(input.platformPath, '**', 'metaeditor64.exe'), {
+        nocase: true
+      })[0] || '';
     const mte32Exe =
-      glob.sync(Path.join(input.platformPath, '**', 'metaeditor.exe'))[0] || '';
+      glob.sync(Path.join(input.platformPath, '**', 'metaeditor.exe'), {
+        nocase: true
+      })[0] || '';
     const mteExe = mte64Exe || mte32Exe || '';
     const platformPath = Path.dirname(mteExe) || '';
     // Const platformPathAbs = Path.resolve(glob.sync(platformPath)[0]);

@@ -808,8 +808,8 @@
           return __awaiter(this, void 0, void 0, function* () {
             const httpclient = OidcClient.createHttpClient();
             const res = yield httpclient.getJson(id_token_url).catch(error => {
-              throw new Error(`Failed to get ID Token. \n
-        Error Code : ${error.statusCode}\n
+              throw new Error(`Failed to get ID Token. \n 
+        Error Code : ${error.statusCode}\n 
         Error Message: ${error.result.message}`);
             });
             const id_token =
@@ -23214,7 +23214,7 @@
         ignoreWarnings: false,
         includePath: '',
         logFilePath: 'my-custom-log.log',
-        platformPath: '.platform',
+        platformPath: '.',
         initPlatform: false,
         verbose: true,
         workingDirectory: '.'
@@ -23233,12 +23233,13 @@
 
         const configFilePath = `tester.ini`;
         const mte64Exe =
-          glob.sync(
-            Path.join(input.platformPath, '**', 'metaeditor64.exe')
-          )[0] || '';
+          glob.sync(Path.join(input.platformPath, '**', 'metaeditor64.exe'), {
+            nocase: true
+          })[0] || '';
         const mte32Exe =
-          glob.sync(Path.join(input.platformPath, '**', 'metaeditor.exe'))[0] ||
-          '';
+          glob.sync(Path.join(input.platformPath, '**', 'metaeditor.exe'), {
+            nocase: true
+          })[0] || '';
         const mteExe = mte64Exe || mte32Exe || '';
         const platformPath = Path.dirname(mteExe) || '';
         // Const platformPathAbs = Path.resolve(glob.sync(platformPath)[0]);
