@@ -7,37 +7,79 @@ on:
 
 jobs:
   Windows:
+    needs: Linux
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: platform-files
+          path: .platform
       - name: Run local action (syntax only)
         uses: ./
         with:
           include: tests
+          mt-path: .platform
           syntax-only: true
           verbose: true
       - name: Run local action (compile)
         uses: ./
         with:
           include: tests
+          mt-path: .platform
           verbose: true
       - name: Print compiled files
         run: '(Get-ChildItem -Recurse -Path . -Include *.ex[45]).fullname'
         shell: powershell
+      - uses: geekyeggo/delete-artifact@v4
+        with:
+          name: platform-files
+    timeout-minutes: 20
   Linux:
     runs-on: ubuntu-latest
-    container:
-      image: ea31337/ea-tester:dev
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache
+          key: cache-${{ hashFiles('.github/workflows/action.yml') }}
+      - uses: actions/cache@v4
+        with:
+          path: ~/.wine
+          key: wine-${{ hashFiles('.github/workflows/action.yml') }}
+      - name: Install platform
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: platform-install.yml
+          configuration: |
+            [defaults]
+            nocows = false
+            stdout_callback = yaml
+          directory: ./ansible
+          options: |
+            --connection local
+            --inventory localhost,
+            --verbose
+          requirements: galaxy-requirements.yml
       - name: Run local action (syntax only)
+        env:
+          DISPLAY: :0
         uses: ./
         with:
           include: tests
+          mt-path: /home/runner/.wine/drive_c
           syntax-only: true
           verbose: true
       - name: Run local action (compile)
+        env:
+          DISPLAY: :0
         uses: ./
         with:
           include: tests
+          mt-path: /home/runner/.wine/drive_c
           verbose: true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: platform-files
+          path: ~/.wine/drive_c/Program*/**/*.ex?
+    timeout-minutes: 20

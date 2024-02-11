@@ -1,0 +1,3 @@
+# Python's requirements
+# Usage: pip install -r requirements.txt
+ansible

@@ -7,3 +7,4 @@
 *.md      text eol=lf
 *.txt     text eol=lf
 *.yml     text eol=lf whitespace=blank-at-eol,-blank-at-eof,-space-before-tab,tab-in-indent,tabwidth=2
+dist/*.js text eol=lf whitespace=-space-before-tab,-tab-in-indent
