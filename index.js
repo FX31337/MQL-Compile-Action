@@ -80,12 +80,6 @@ if (!isPost) {
       throw new Error(`Platform cannot be found in "${input.platformPath}"!`);
     }
 
-    if (mte32Exe.length > 0) {
-      fs.writeFileSync(
-        configFilePath,
-        '[Tester]\r\nShutdownTerminal=true\r\nTestExpert=Dummy\r\nTestShutdownTerminal=true\r\n'
-      );
-    }
     const includePath =
       input.includePath === ''
         ? Path.join(platformPath, mte64Exe.length > 0 ? 'MQL5' : 'MQL4')
@@ -97,6 +91,11 @@ if (!isPost) {
           ? `"/config:${configFilePath}"`
           : `"${configFilePath}"`
       }`;
+
+      fs.writeFileSync(
+        configFilePath,
+        '[Tester]\r\nExpert=Dummy\n\nTestExpert=Dummy\r\nShutdownTerminal=1\r\nTestShutdownTerminal=1\r\n'
+      );
 
       input.verbose && console.log(`Executing: ${command}`);
 
