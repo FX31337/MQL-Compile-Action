@@ -1,55 +1,55 @@
 # action.yml
 ---
-name: 'MQL Compile'
-description: 'Compiles MQL programs'
-author: 'kenorb'
+name: MQL Compile
+description: Compiles MQL programs
+author: kenorb
 branding:
-  icon: 'bar-chart'
-  color: 'green'
+  icon: bar-chart
+  color: green
 inputs:
   path:
-    description: 'Path to compile'
+    description: Path to compile
     required: true
-    default: '.'
+    default: .
   path-ignore:
-    description: 'Path for compiler to ignore'
+    description: Path for compiler to ignore
     required: false
-    default: '**/*.mqh'
+    default: "**/*.mqh"
   github-token:
-    description: 'secret token'
+    description: secret token
     required: true
   include:
-    description: 'Path for includes'
-    default: ''
+    description: Path for includes
+    default:
   ignore-warnings:
-    description: 'Whether to ignore compilation warnings'
+    description: Whether to ignore compilation warnings
     required: false
     default: false
   log-file:
-    description: 'Specifies log filename for compilation messages.'
+    description: Specifies log filename for compilation messages.
     required: false
-    default: 'mql.log'
+    default: mql.log
   mt-path:
-    description: 'Platform path'
+    description: Platform path
     required: false
-    default: '.'
+    default: .
   syntax-only:
-    description: 'Whether to check for syntax only (no binary file is generated)'
+    description: Whether to check for syntax only (no binary file is generated)
     required: false
     default: false
   init-platform:
-    description: 'Initializes platform files (includes, example EAs, script examples)'
+    description: Initializes platform files (includes, example EAs, script examples)
     required: false
     default: false
   verbose:
-    description: 'Enables verbose mode (to print more messages)'
+    description: Enables verbose mode (to print more messages)
     required: false
     default: false
   working-directory:
-    description: 'Working directory where to run commands'
+    description: Working directory where to run commands
     required: false
-    default: '.'
+    default: .
 runs:
-  using: node16
+  using: node20
   main: dist/index.js
   post: dist/index.js
