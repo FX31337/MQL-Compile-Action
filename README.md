@@ -21,7 +21,7 @@ This action is only supported on [Windows images](https://github.com/actions/vir
 ```yaml
 runs-on: windows-latest
 steps:
-  - uses: fx31337/mql-compile-action@v1
+  - uses: fx31337/mql-compile-action@v2
 ```
 
 ### Specific release
@@ -29,7 +29,7 @@ steps:
 ```yaml
 runs-on: windows-latest
 steps:
-  - uses: fx31337/mql-compile-action@v1.0.0
+  - uses: fx31337/mql-compile-action@v2.0.0
 ```
 
 Note: Check *Releases* for more details.
@@ -53,8 +53,11 @@ steps:
         include: '.'
         log-file: 'results.log'
         ignore-warnings: true
+        mt-path: my/platform/path
         verbose: true
 ```
+
+*Note: From v2 releases, this action doesn't install platform by default.*
 
 ## Inputs
 
