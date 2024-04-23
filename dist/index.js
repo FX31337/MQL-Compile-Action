@@ -23258,8 +23258,23 @@
             : input.includePath;
 
         if (input.initPlatform) {
-          const command = `"${mteExe}" /log:CON /portable ${
-            mte64Exe.length > 0
+          const configFilePath = `tester.ini`;
+          const mt64Exe =
+            glob.sync(Path.join(input.platformPath, '**', 'terminal64.exe'), {
+              nocase: true
+            })[0] || '';
+          const mt32Exe =
+            glob.sync(Path.join(input.platformPath, '**', 'terminal.exe'), {
+              nocase: true
+            })[0] || '';
+          const mtExe = mt64Exe || mt32Exe || '';
+          if (mtExe.length > 0) {
+            input.verbose && console.log(`MT path: "${mtExe}".`);
+          } else {
+            throw new Error(`Terminal cannot be found in "${input.platformPath}"!`);
+          }
+          const command = `"${mtExe}" /log:CON /portable ${
+            mt64Exe.length > 0
               ? `"/config:${configFilePath}"`
               : `"${configFilePath}"`
           }`;
