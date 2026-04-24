@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/FX31337/MQL-Compile-Action/issues",
   "dependencies": {
-    "@actions/core": "^1.10.0",
+    "@actions/core": "^1.11.1",
     "@actions/exec": "^1.1",
     "@actions/github": "^5.1.1",
     "@actions/io": "^1.1.3",
