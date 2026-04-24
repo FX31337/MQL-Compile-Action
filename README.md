@@ -2,7 +2,6 @@
 
 [![Release][github-release-image]][github-release-link]
 [![Status][gha-image-action-master]][gha-link-action-master]
-[![Status][gha-image-lint-master]][gha-link-lint-master]
 [![Status][gha-image-test-master]][gha-link-test-master]
 [![Telegram Channel][tg-channel-image]][tg-channel-link]
 [![Telegram Chat][tg-chat-image]][tg-chat-link]
@@ -129,7 +128,6 @@ Sets working directory where to run commands. Default: *.*.
 
 [gha-link-action-master]: https://github.com/FX31337/MQL-Compile-Action/actions?query=workflow%3AAction+branch%3Amaster
 [gha-image-action-master]: https://github.com/FX31337/MQL-Compile-Action/workflows/Action/badge.svg
-[gha-link-lint-master]: https://github.com/FX31337/MQL-Compile-Action/actions?query=workflow%3ALint+branch%3Amaster
-[gha-image-lint-master]: https://github.com/FX31337/MQL-Compile-Action/workflows/Lint/badge.svg
+
 [gha-link-test-master]: https://github.com/FX31337/MQL-Compile-Action/actions?query=workflow%3ATest+branch%3Amaster
 [gha-image-test-master]: https://github.com/FX31337/MQL-Compile-Action/workflows/Test/badge.svg
