@@ -70,7 +70,7 @@ Default: `.` (all files in the current folder are compiled).
 
 Path to folder or file for compiler to ignore.
 
-Default: `**/*.mqh` (all .mqh files are ignored by default).
+Default: `**/*.mq[45]` (all .mqh files are ignored by default).
 
 ### `include` (string)
 

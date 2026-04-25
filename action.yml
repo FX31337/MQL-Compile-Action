@@ -14,7 +14,7 @@ inputs:
   path-ignore:
     description: Path for compiler to ignore
     required: false
-    default: "**/*.mqh"
+    default: "**/*.mq[45]"
   github-token:
     description: secret token
     required: true
