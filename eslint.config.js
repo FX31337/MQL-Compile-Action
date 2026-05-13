@@ -283,7 +283,6 @@ module.exports = [
       "template-curly-spacing": ["error", "never"],
       "template-tag-spacing": "error",
       "unicode-bom": ["error", "never"],
-      "valid-jsdoc": "error",
       "vars-on-top": "error",
       "wrap-iife": "error",
       "wrap-regex": "error",
