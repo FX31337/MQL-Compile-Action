@@ -214,7 +214,9 @@ timeout: 20000 };
         }
 
         /* eslint-disable */
+        /* eslint-disable */
         createComment(warnings, errors);
+        /* eslint-enable */
         /* eslint-enable */
         core.setFailed(errorText);
       }
