@@ -4,9 +4,7 @@ const jestPlugin = require("eslint-plugin-jest");
 
 module.exports = [
   {
-    files: [
-      "**/*.js"
-    ],
+    files: ["**/*.js"],
     languageOptions: {
       ecmaVersion: 2018,
       sourceType: "commonjs",
@@ -48,15 +46,9 @@ module.exports = [
       "array-bracket-newline": "error",
       "array-bracket-spacing": "error",
       "array-callback-return": "error",
-      "array-element-newline": [
-        "error",
-        "always"
-      ],
+      "array-element-newline": ["error", "always"],
       "arrow-body-style": "error",
-      "arrow-parens": [
-        "error",
-        "as-needed"
-      ],
+      "arrow-parens": ["error", "as-needed"],
       "arrow-spacing": [
         "error",
         {
@@ -65,10 +57,7 @@ module.exports = [
         }
       ],
       "block-scoped-var": "error",
-      "block-spacing": [
-        "error",
-        "always"
-      ],
+      "block-spacing": ["error", "always"],
       "brace-style": [
         "error",
         "1tbs",
@@ -78,15 +67,9 @@ module.exports = [
       ],
       "callback-return": "error",
       camelcase: "error",
-      "capitalized-comments": [
-        "error",
-        "always"
-      ],
+      "capitalized-comments": ["error", "always"],
       "class-methods-use-this": "error",
-      "comma-dangle": [
-        "error",
-        "never"
-      ],
+      "comma-dangle": ["error", "never"],
       "comma-spacing": [
         "error",
         {
@@ -94,20 +77,9 @@ module.exports = [
           before: false
         }
       ],
-      "comma-style": [
-        "error",
-        "last"
-      ],
-      complexity: [
-        "error",
-        {
-          max: 50
-        }
-      ],
-      "computed-property-spacing": [
-        "error",
-        "never"
-      ],
+      "comma-style": ["error", "last"],
+      complexity: ["error", { max: 50 }],
+      "computed-property-spacing": ["error", "never"],
       "consistent-return": "error",
       "consistent-this": "error",
       curly: "off",
@@ -148,10 +120,7 @@ module.exports = [
         }
       ],
       "line-comment-position": "error",
-      "linebreak-style": [
-        "error",
-        "unix"
-      ],
+      "linebreak-style": ["error", "unix"],
       "lines-around-comment": "error",
       "lines-around-directive": "error",
       "lines-between-class-members": "error",
@@ -164,13 +133,8 @@ module.exports = [
       "max-params": "error",
       "max-statements": "off",
       "max-statements-per-line": "off",
-      "multiline-comment-style": [
-        "error",
-        "separate-lines"
-      ],
-      "multiline-ternary": [
-        "off"
-      ],
+      "multiline-comment-style": ["error", "separate-lines"],
+      "multiline-ternary": ["off"],
       "new-cap": "error",
       "new-parens": "error",
       "newline-after-var": "off",
@@ -270,10 +234,7 @@ module.exports = [
       "no-warning-comments": "error",
       "no-whitespace-before-property": "error",
       "object-curly-newline": "error",
-      "object-curly-spacing": [
-        "error",
-        "always"
-      ],
+      "object-curly-spacing": ["error", "always"],
       "object-property-newline": "error",
       "object-shorthand": "error",
       "one-var": "off",
@@ -305,51 +266,30 @@ module.exports = [
       "rest-spread-spacing": "error",
       semi: "error",
       "semi-spacing": "error",
-      "semi-style": [
-        "error",
-        "last"
-      ],
+      "semi-style": ["error", "last"],
       "sort-imports": "error",
       "sort-keys": "off",
       "sort-vars": "error",
       "space-before-blocks": "error",
       "space-before-function-paren": "off",
-      "space-in-parens": [
-        "error",
-        "never"
-      ],
+      "space-in-parens": ["error", "never"],
       "space-infix-ops": "error",
       "space-unary-ops": "error",
-      "spaced-comment": [
-        "error",
-        "always"
-      ],
+      "spaced-comment": ["error", "always"],
       strict: "error",
       "switch-colon-spacing": "error",
       "symbol-description": "error",
-      "template-curly-spacing": [
-        "error",
-        "never"
-      ],
+      "template-curly-spacing": ["error", "never"],
       "template-tag-spacing": "error",
-      "unicode-bom": [
-        "error",
-        "never"
-      ],
+      "unicode-bom": ["error", "never"],
       "vars-on-top": "error",
       "wrap-iife": "error",
       "wrap-regex": "error",
       "yield-star-spacing": "error",
-      yoda: [
-        "error",
-        "never"
-      ]
+      yoda: ["error", "never"]
     }
   },
   {
-    ignores: [
-      "dist/",
-      "node_modules/"
-    ]
+    ignores: ["dist/", "node_modules/"]
   }
 ];
