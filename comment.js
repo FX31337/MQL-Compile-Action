@@ -1,3 +1,5 @@
+"use strict";
+
 const github = require('@actions/github');
 const core = require('@actions/core');
 
