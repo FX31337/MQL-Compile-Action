@@ -4,9 +4,7 @@ const jestPlugin = require("eslint-plugin-jest");
 
 module.exports = [
   {
-    files: [
-      "**/*.js"
-    ],
+    files: ["**/*.js"],
     languageOptions: {
       ecmaVersion: 2018,
       sourceType: "commonjs",
