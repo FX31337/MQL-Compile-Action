@@ -1,5 +1,4 @@
 const jestPlugin = require("eslint-plugin-jest");
-const globals = require("globals");
 
 module.exports = [
   {
@@ -8,12 +7,31 @@ module.exports = [
       ecmaVersion: 2018,
       sourceType: "commonjs",
       globals: {
-        ...globals.browser,
-        ...globals.node,
-        ...globals.es6,
-        ...globals.jest,
         Atomics: "readonly",
         SharedArrayBuffer: "readonly",
+        // Browser globals
+        window: "readonly",
+        document: "readonly",
+        navigator: "readonly",
+        // Node.js globals
+        global: "readonly",
+        process: "readonly",
+        console: "readonly",
+        __dirname: "readonly",
+        __filename: "readonly",
+        require: "readonly",
+        module: "readonly",
+        exports: "readonly",
+        // Jest globals
+        jest: "readonly",
+        describe: "readonly",
+        it: "readonly",
+        test: "readonly",
+        expect: "readonly",
+        beforeEach: "readonly",
+        afterEach: "readonly",
+        beforeAll: "readonly",
+        afterAll: "readonly",
       },
     },
     plugins: {
