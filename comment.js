@@ -17,7 +17,7 @@ module.exports = async (warnings, errors) => {
   await octokit.issues.createComment({
     owner: payload.repository.owner.login,
     repo: payload.repository.name,
-    issue_number: payload.number, // eslint-disable-line camelcase
+    issue_number: payload.number,
     body: getBody(warnings, errors)
   });
 };
