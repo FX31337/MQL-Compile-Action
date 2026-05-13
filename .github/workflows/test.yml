@@ -12,6 +12,7 @@ on:
       - '**/*.js'
       - '**/*.y?ml'
       - '*.js'
+  workflow_dispatch:
 
 jobs:
   build:

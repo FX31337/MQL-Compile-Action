@@ -2,8 +2,9 @@
 name: Action
 
 on:
-  - pull_request
-  - push
+  pull_request:
+  push:
+  workflow_dispatch:
 
 jobs:
   Windows:
