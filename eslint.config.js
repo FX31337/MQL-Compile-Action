@@ -1,12 +1,12 @@
-import jestPlugin from "eslint-plugin-jest";
-import globals from "globals";
+const jestPlugin = require("eslint-plugin-jest");
+const globals = require("globals");
 
-export default [
+module.exports = [
   {
     files: ["**/*.js"],
     languageOptions: {
       ecmaVersion: 2018,
-      sourceType: "module",
+      sourceType: "commonjs",
       globals: {
         ...globals.browser,
         ...globals.node,
@@ -274,6 +274,6 @@ export default [
     },
   },
   {
-    ignores: ["dist/", "node_modules/", "test_runner.py"],
+    ignores: ["dist/", "node_modules/"],
   },
 ];
