@@ -1,3 +1,5 @@
+"use strict";
+
 const jestPlugin = require("eslint-plugin-jest");
 
 module.exports = [
@@ -31,11 +33,11 @@ module.exports = [
         beforeEach: "readonly",
         afterEach: "readonly",
         beforeAll: "readonly",
-        afterAll: "readonly",
-      },
+        afterAll: "readonly"
+      }
     },
     plugins: {
-      jest: jestPlugin,
+      jest: jestPlugin
     },
     rules: {
       "jest/no-disabled-tests": "warn",
@@ -47,15 +49,18 @@ module.exports = [
       "array-bracket-newline": "error",
       "array-bracket-spacing": "error",
       "array-callback-return": "error",
-      "array-element-newline": "error",
+      "array-element-newline": [
+        "error",
+        "always"
+      ],
       "arrow-body-style": "error",
       "arrow-parens": ["error", "as-needed"],
       "arrow-spacing": [
         "error",
         {
           after: true,
-          before: true,
-        },
+          before: true
+        }
       ],
       "block-scoped-var": "error",
       "block-spacing": ["error", "always"],
@@ -63,20 +68,20 @@ module.exports = [
         "error",
         "1tbs",
         {
-          allowSingleLine: true,
-        },
+          allowSingleLine: true
+        }
       ],
       "callback-return": "error",
       camelcase: "error",
       "capitalized-comments": ["error", "always"],
       "class-methods-use-this": "error",
-      "comma-dangle": "error",
+      "comma-dangle": ["error", "never"],
       "comma-spacing": [
         "error",
         {
           after: true,
-          before: false,
-        },
+          before: false
+        }
       ],
       "comma-style": ["error", "last"],
       complexity: ["error", { max: 50 }],
@@ -90,8 +95,8 @@ module.exports = [
       "dot-notation": [
         "error",
         {
-          allowKeywords: true,
-        },
+          allowKeywords: true
+        }
       ],
       "eol-last": "error",
       eqeqeq: "error",
@@ -117,8 +122,8 @@ module.exports = [
         "error",
         {
           after: true,
-          before: true,
-        },
+          before: true
+        }
       ],
       "line-comment-position": "error",
       "linebreak-style": ["error", "unix"],
@@ -287,10 +292,13 @@ module.exports = [
       "wrap-iife": "error",
       "wrap-regex": "error",
       "yield-star-spacing": "error",
-      yoda: ["error", "never"],
-    },
+      yoda: ["error", "never"]
+    }
   },
   {
-    ignores: ["dist/", "node_modules/"],
-  },
+    ignores: [
+      "dist/",
+      "node_modules/"
+    ]
+  }
 ];
