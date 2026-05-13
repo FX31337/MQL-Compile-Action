@@ -1,3 +1,5 @@
+"use strict";
+
 const Path = require('path');
 const fs = require('fs-extra');
 const os = require('os');
@@ -211,9 +213,7 @@ timeout: 20000 };
           }
         }
 
-        /* eslint-disable */
         createComment(warnings, errors);
-        /* eslint-enable */
         core.setFailed(errorText);
       }
     }
